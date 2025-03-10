@@ -1,0 +1,55 @@
+\begin{homeworkProblem}
+
+Sampling from the discrete distribution. \\
+(a) Given $n$ positive real number $a_1, \ldots, a_n$, where $\sum\limits_{j=1}^n a_j=1$; and $n$ i.i.d. random variables $X_1, \ldots, X_n \sim \operatorname{Gumbel}(0,1)$. Show the following equality:
+$$P\left(\log a_i+X_i=\max _{j \in\{1, \ldots, n\}}\left(\log a_j+X_j\right)\right)=a_i$$
+
+(b) Illustrate how the above result leads to new sampling methods for the discrete distribution.
+
+\textcolor{blue}{Solution} \\
+
+We can get the PDF and CDF of Gumbel distribution as follows:
+$$F(x;\mu, \sigma) = e^{-e^{-\frac{x-\mu}{\sigma}}}, f(x;\mu,\sigma) = \frac{1}{\sigma}e^{-\frac{x-\mu}{\sigma}}e^{-e^{-\frac{x-\mu}{\sigma}}}, -\infty<x<\infty$$
+Here $\mu=0, \sigma=1$, so
+$$F(x)=e^{-e^{-x}}, f(x)=e^{-x}e^{-e^{-x}}$$
+
+Let $Y_i=\log a_i+X_i$, then
+\begin{align*}
+&\ P\left(\log a_i+X_i=\max_{j \in\{1, \ldots, n\}}\left(\log a_j+X_j\right)\right) \\
+&= P(Y_i=\max_{j \in\{1, \ldots, n\}} Y_j) \\
+&= \int_{-\infty}^{\infty}P(Y_i=\max_{j \in\{1, \ldots, n\}} Y_j|Y_i=x)f_{Y_i}(x) \dx \qquad\text{(LOTP)} \\
+&= \int_{-\infty}^{\infty}P(Y_i=\max_{j \in\{1, \ldots, n\}} Y_j|Y_i=x)f_{X_i}(x-\log a_i) \dx \\
+&= \int_{-\infty}^{\infty}P(Y_1\leq Y_1, \ldots, Y_n\leq Y_i|Y_i=x+\log a_i)f(x) \dx \\
+&= \int_{-\infty}^{+\infty} \left(\prod_{j=1}^{n} P(X_{j} \leq x + \log a_{i} - \log a_{j})\right)f(x) \dx \\
+&= \int_{-\infty}^{+\infty} \left(\prod_{j=1}^{n} F(x + \log a_{i} - \log a_{j})\right)f(x) \dx \\
+&= \int_{-\infty}^{+\infty} \left(\prod_{j=1}^{n} \exp(- \exp(-x - \log a_{i} + \log a_{j}))\right) e^{-x}e^{-e^{-x}} \dx \\
+&= \int_{-\infty}^{+\infty} \left(\prod_{j=1}^{n} \exp(- e^{-x}\cdot e^{-\log a_{i}} \cdot e^{\log a_{j}})\right) e^{-x}e^{-e^{-x}} \dx \\
+&= \int_{-\infty}^{+\infty} \left(\prod_{j=1}^{n} \exp(- e^{-x}\cdot \frac{a_{j}}{a_{i}})\right) e^{-x}e^{-e^{-x}} \dx \\
+&= \int_{-\infty}^{+\infty} \exp\left(- e^{-x} \sum_{j=1}^{n} \frac{a_{j}}{a_{i}}\right) e^{-x}e^{-e^{-x}} \dx \\
+\end{align*}
+\begin{align*}
+&= \int_{-\infty}^{+\infty} \exp\left(-u \sum_{j=1}^{n} \frac{a_{j}}{a_{i}}\right) ue^{-u} \left(-\dfrac{1}{u}\right) \du \qquad (u = e^{-x}) \\
+&= \int_{0}^{+\infty} \exp\left(- u \sum_{j=1}^{n} \frac{a_{j}}{a_{i}} - u\right) \du \\
+&= \int_{0}^{+\infty} \exp\left[- u \left(1 + \sum_{j = 1}^{n} \frac{a_{j}}{a_{i}}\right)\right] \du
+\end{align*}
+Since the PDF of Expo($\lambda$) is $\lambda e^{-\lambda x}$, here we take $\lambda = 1 + \sum\limits_{j = 1}^{n} \dfrac{a_{j}}{a_{i}}$, so
+
+\begin{align*}
+&\ \int_{0}^{+\infty} \exp\left[- u \left(1 + \sum_{j = 1}^{n} \frac{a_{j}}{a_{i}}\right)\right] \du \\
+&= \dfrac{1}{\lambda} \int_{0}^{+\infty} \lambda\exp\left(- \lambda u\right) \du \\
+&= \dfrac{1}{\lambda} \\
+&= \dfrac{1}{1 + \sum\limits_{j = 1}^{n} \frac{a_{j}}{a_{i}}} \\
+&= \dfrac{a_{i}}{\sum\limits_{j = 1}^{n} a_{j}} \\
+&= a_{i}.
+\end{align*}
+
+(b) Suppose we have a discrete random variable $X$ whose PMF is
+$$P(X = x_i) = a_i,\quad i \in \{1,2,\ldots,n\}$$
+We can sample $X$ by: \\
+1. Sample $n$ independent values $X_1,\ldots,X_n \stackrel{i.i.d.}{\sim} \text{Gumbel}(0,1)$ \\
+2. Let $i = \arg\max\limits_{j \in \{1,2,\dots,n\}} \left( \log a_j + X_j + \right)$ \\
+3. Set $X \gets x_i$.
+
+\end{homeworkProblem}
+
+\newpage

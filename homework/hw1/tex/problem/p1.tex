@@ -1,0 +1,68 @@
+\begin{homeworkProblem}
+
+Let $X, Y$ be jointly Gaussian random variables. Show the following equality:
+$$\E[Y | X]=L[Y | X]=\E(Y)+\dfrac{\Cov(X, Y)}{\Var(X)}(X-\E(X))$$
+
+\textcolor{blue}{Solution}
+Firstly prove that $L[Y|X]=\E(Y)+\dfrac{\Cov(X, Y)}{\Var(X)}(X-\E(X))$: \\
+Since $L[Y|X]$ is the best linear estimator of $Y$ given $X$, we can write $L[Y|X]=a+bX$. Then we define that
+$$f(a,b) = \E[(Y - a - bX)^2] = a^2 + \E(Y^2) + b^2 \E(X^2) - 2a \E(Y) + 2ab \E(X) - 2b \E(Y)$$
+To minimizes $f(a,b)$, we need to set the first derivative of $f(a,b)$ to $0$:
+\begin{align*}
+\dfrac{\partial f}{\partial a} &= 2a - 2\E(Y) + 2b \E(X) = 0 \\
+\dfrac{\partial f}{\partial b} &= 2b \E(X^2) + 2a \E(X) - 2\E[XY] = 0
+\end{align*}
+Solve the equations, we can get that
+$$a = \E(Y) - \dfrac{\Cov(X,Y)}{\Var(X)} \E(X),\quad b = \dfrac{\Cov(X,Y)}{\Var(X)}$$
+We also need to prove that $\nabla^2 f(a,b)$ is positive semidefinite to ensure that $(a, b)$ is the minimum point:
+$$\nabla^2 f(a,b) = \begin{bmatrix} 2 & 2 \E(X) \\ 2 \E(X) & 2 \E(X^2) \end{bmatrix}\succeq 0$$
+So above all
+$$L[Y|X] = \E(Y) + \dfrac{\Cov(X,Y)}{\Var(X)} (X - \E(X))$$
+
+
+Then prove that $\E[Y|X]=L[Y|X]$:
+\begin{enumerate}
+\item $Y-L[Y|X] \perp X$, i.e. $\E\left[\left(Y-L[Y|X]\right)X\right]=0$:
+\begin{align*}
+\E[(Y - L[Y|X])X] &= \E\left[XY - X\left(\E(Y)+\dfrac{\Cov(X, Y)}{\Var(X)}(X-\E(X))\right)\right] \\
+&= \E(XY) - \E\left[X\E(Y)\right] - \E\left[\dfrac{\Cov(X,Y)}{\Var(X)}\cdot X^2\right] + \E\left[\dfrac{\Cov(X,Y)}{\Var(X)}\cdot X \E(X)\right] \\
+&= \left[\E(XY) - \E(X)\E(Y)\right] - \dfrac{\Cov(X,Y)}{\Var(X)}\left[\E(X^2) - \E^2(X)\right] \\
+&= \Cov(X,Y) - \dfrac{\Cov(X,Y)}{\Var(X)} \cdot \Var(X) \\
+&= 0
+\end{align*}
+\item $\E\left[Y-L[Y|X]\right] = 0$:
+\begin{align*}
+\E[Y - L[Y|X]] &= \E\left[Y - \E(Y) - \dfrac{\Cov(X,Y)}{\Var(X)}\cdot\left[X - \E(X)\right]\right] \\
+&= \E(Y) - \E(Y) - \dfrac{\Cov(X,Y)}{\Var(X)}\cdot\E\left[X - \E(X)\right] \\
+&= 0
+\end{align*}
+
+\item Two Gaussian variable's Orthogonal, one of which has a $0$ expectation, is equivalent to uncorrelated: \\
+SSince $X\perp Y$, so $\E(XY)=0$, so $\Cov(X,Y)=\E(XY)-\E(X)\E(Y)=0\Rightarrow \rho=0$. So $X, Y$ are uncorrelated. \\
+And if $X,Y$ are uncorrelated, then $\Cov(X,Y)=\E(XY)-\E(X)\E(Y)=\E(XY)=0\Rightarrow \E(XY)=0$.
+So two Gaussian variable's Orthogonal is equivalent to uncorrelated.
+
+\item $Y-L[Y|X]$ and $X$ are joint normal: $\forall a_1, a_2\in\mathbb{R}$,
+\begin{align*}
+a_1(Y - L[Y|X]) + a_2X &= a_1Y - a_1\E(Y) - a_1\dfrac{\Cov(X,Y)}{\Var(X)}X + a_1\dfrac{\Cov(X,Y)}{\Var(X)}\E(X) + a_2X \\
+&= \left(a_2 - a_1 \dfrac{\Cov(X,Y)}{\Var(X)}\right)X + a_1Y + \left[a_1\dfrac{\Cov(X,Y)}{\Var(X)}\E(X) - a_1\E(Y)\right]
+\end{align*}
+Since $X, Y$ are jointly Gaussian random variables, so $\forall a_3, a_4, a_5\in\mathbb{R}$, $a_3Y+a_4X+a_5$ is also a Gaussian distribution. Here take $a_3=\left(a_2 - a_1 \dfrac{\Cov(X,Y)}{\Var(X)}\right), a_4=a_1, a_5=a_1\dfrac{\Cov(X,Y)}{\Var(X)}\E(X) - a_1\E(Y)$, so $Y-L[Y|X]$ and $X$ are joint normal distribution.
+
+\item $Y-L[Y|X]$ and $X$ are independent:
+Combined with step step 1. we know that $\E[(Y - L[Y|X])X] = 0$. From step 2. we know that $\E[(Y - L[Y|X])X] = 0$, so we have $Y-L[Y|X]$ and $X$ are uncorrelated, which is certainly independent. Thus, we can further conclude that for any function of $X: \forall\phi(X)$, $Y-L[Y|X]$ and $\phi(X)$ are independent.
+
+\item $Y-L[Y|X]$ and $\phi(X)$ are uncorrelated:
+Since from step 2. $\E\left[Y-L[Y|X]\right]=0$, so $\E\left[\left(Y-L[Y|X]\right)\phi(X)\right]=\E\left[Y-L[Y|X]\right]\E\left[\phi(X)\right]=0\Rightarrow \Cov(X,Y)$. So $Y-L[Y|X]$ and $\phi(X)$ are uncorrelated.
+
+\item $Y-L[Y|X]\perp \phi(X)$: We have shown that $\E\left[\left(Y-L[Y|X]\right)\phi(X)\right]=0, \forall\phi(X)$, so $Y-L[Y|X]$ and $\phi(X)$ are orthogonal.
+
+\item $L[Y|X]=\E[Y|X]$: So we can say that $Y-L[Y|X]$ is orthogonal to any function of $X$, which means that $L[Y|X]$ is the projector of $Y$ onto the space of functions of $X$. So $L[Y|X]$ is the best linear estimator of $Y$ given $X$, which is $\E[Y|X]$.
+
+So above all, we have proved that $L[Y|X]=\E[Y|X]$.
+
+\end{enumerate}
+
+\end{homeworkProblem}
+
+\newpage

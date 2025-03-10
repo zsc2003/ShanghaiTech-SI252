@@ -1,0 +1,32 @@
+\begin{homeworkProblem}
+Uniform is the only distribution that takes the maximum entropy.
+
+\textcolor{blue}{Solution} \\
+
+Consider the diecrete case $|\mathcal{X}|<\infty$. \\
+
+1. Consider the KL-divergence $D\left(p(x)\|q(x)\right)\geq 0$.\\
+proof:
+\begin{align*}
+-D\left(p(x)\|q(x)\right) &= \sum_{x}p(x)\log\dfrac{q(x)}{p(x)} \\
+&= \mathbb{E}_{x\sim p(x)}\left[\log\dfrac{q(x)}{p(x)}\right] \\
+&\leq \log\mathbb{E}_{x\sim p(x)}\left[\dfrac{q(x)}{p(x)}\right] \text{\ \ \ \ (Jensen's Inequality)} \\
+&= \log\sum_{x}p(x)\dfrac{q(x)}{p(x)} \\
+&= 0
+\end{align*}
+i.e. $D\left(p(x)\|q(x)\right)\geq 0$. \\
+If and only if when $p(x)=q(x)$, the equality holds, this is because Jensen's Inequality holds when the function is linear.
+
+2. Consider the entropy $H(X)=\E\left[-\log p(x)\right]=\sum_{x\in\mathcal{X}}p(x)\log\dfrac{1}{p(x)}$. \\
+Let $u(x)=\dfrac{1}{|\mathcal{X}|}$, then
+\begin{align*}
+D\left(p\|u\right) &= \sum_{x\in\mathcal{X}}p(x)\log\dfrac{p(x)}{u(x)} \\
+&= \sum_{x\in\mathcal{X}}p(x)\log|\mathcal{X}| - \sum_{x\in\mathcal{X}}p(x)\log\dfrac{1}{p(x)} \\
+&= \log|\mathcal{X}| - H(X) \\
+&\geq 0
+\end{align*}
+If and only if $p(x)=u(x)$, the equality holds, i.e. $H(X)$ takes the maximum value $\log|\mathcal{X}|$.
+
+So above all, the uniform distribution is the only distribution that takes the maximum entropy if $|\mathcal{X}|<\infty$.
+
+\end{homeworkProblem}

@@ -1,0 +1,58 @@
+\begin{homeworkProblem}
+
+Given a random variable $X \sim \N(0,1)$, evaluate the tail probability $c=P(X>8)$ by Monte Carlo methods with \& without importance sampling. Discuss the pros and cons of importance sampling.
+
+\textcolor{blue}{Solution} \\
+
+1. Without importance sampling. \\
+The total $10^9$ samples from $\N(0,1)$ have no single sample greater than 8. \\
+So the tail probability estimatied is $c=P(X>8)=0$. \\
+
+2. With importance sampling. \\
+To calculate $c=P(Y>8)$, where $Y\sim \N(0,1)$. \\
+So the PDF of $Y$ is that $f(y)=\dfrac{1}{\sqrt{2\pi}}e^{-\frac{1}{2}y^2}$. \\
+It may be difficult to calculate the exact value of $c$ using simple sampling methods (because of the 3$\sigma$'s principle, the result must be very small). \\
+So we can use the importance sampling. \\
+Take $g\sim \N(8,1)$. \\
+Let $Y_1,\cdots,Y_N\sim g$, so the PDF of $g$ is that $g(y_j)=\dfrac{1}{\sqrt{2\pi}}e^{-\frac{1}{2}(y_j-8)^2}$. \\
+Let $h(Y_j)$ be the indicator that whether $Y_j>8$. \\
+
+So with monty carlo method, we can get that \\
+$$c=P(Y>8)=\E[\I(Y>8)]=\dfrac{1}{n}\sum_{j=1}^n\I(Y_j'>8)=\dfrac{1}{n}\sum_{j=1}^nh(Y_j')$$
+where $Y_j'\sim \N(0,1)$.\\
+
+With importance sampling, since
+$$I=\E_f[h(Y)]=\int h(y)f(y)dy=\int\dfrac{h(y)f(y)}{g(y)}g(y)dy=E_g\left[\dfrac{h(Y)f(Y)}{g(Y)}\right]$$
+So $I'=\dfrac{1}{n}\sum\limits_{i=1}^n\dfrac{h(Y_j)f(Y_j)}{g(Y_j)}$, where $Y_j\sim \N(8,1)$.\\
+we can get that
+\begin{align*}
+c' &= \dfrac{1}{n}\sum_{j=1}^n\dfrac{h(Y_j)f(Y_j)}{g(Y_j)} \\
+&= \dfrac{1}{n}\sum_{j=1}^n\I(Y_j>8)\cdot \dfrac{\frac{1}{\sqrt{2\pi}}e^{-\frac{1}{2}Y_j^2}}{\frac{1}{\sqrt{2\pi}}e^{-\frac{1}{2}(Y_j-8)^2}} \\
+&= \dfrac{1}{n}\sum_{j=1}^n\I(Y_j>8)\cdot e^{-8Y_j+32}
+\end{align*}
+
+So we just need to sample $n$ times, $Y_j\sim \N(0,8)$, and calculate the average of $\I(Y_j>8)\cdot e^{-8Y_j+32}$.\\
+
+The result using important sampling method is $6.252836307280847e-16$. \\
+Which is very close to the correct answer $6.25*10^{-16}$. \\
+So we can regard that the importance sampling method is effective and provide correct answers. \\
+
+The following are the pages from jupyter notebook to show that the code can successful run out the images and calculation results we mentioned above. \\
+
+
+
+3. The pros and cons of importance sampling. \\
+Pros of Importance Sampling:
+\begin{itemize}
+    \item It is efficient because it allows sampling from a distribution that is easier to sample from, which simplifies the sampling process.
+    \item It improves accuracy for rare events, provides more accurate estimates when dealing with low-probability tail.
+\end{itemize}
+Cons of Importance Sampling:
+\begin{itemize}
+    \item It depends on the choice of the proposal distribution. A poor choice can lead to high variance and inaccurate results.
+    \item It requires more computations to calculate importance weights.
+\end{itemize}
+
+\end{homeworkProblem}
+
+\newpage

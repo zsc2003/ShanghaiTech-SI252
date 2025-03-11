@@ -2,7 +2,7 @@
 
 We wish to estimate the probability of landing heads, denoted by $\theta$, of a biased coin. We model $\theta$ as the value of a random variable $\Theta$ with a known prior PDF $f_{\Theta} \sim \Unif(0,1)$. We consider $n$ independent tosses and let $X$ be the number of heads observed. Find the MMSE $\E[\Theta | X]$ and the LLSE $L[\Theta | X]$.
 
-\textcolor{blue}{Solution} \\
+\solution
 Since $\Theta\sim\Unif(0,1)\sim \Beta(1,1)$, accoding to the Beta-Binomial conjugacy, after $n$ tosses with $X=x$ heads, the posterior distribution of $\Theta$ is
 $$\Theta|X=x\sim\Beta(x+1, n-x+1)$$
 And since the expectation of $\Beta(\alpha, \beta)$ is $\dfrac{\alpha}{\alpha + \beta}$, so

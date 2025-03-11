@@ -2,7 +2,7 @@
 
 Adopt the Acceptance-Rejection method to estimate the value of $\pi$, then evaluate the performance of Monte Carlo algorithms with finite number of samples.
 
-\textcolor{blue}{Solution} \\
+\solution
 
 We can estimate $\pi$ via Monte Carlo method. Sample $X, Y\stackrel{i.i.d.}{\sim}\Unif(0,1)$. If $(x,y)$ is in the unit circle in the first quadrant, then $x^2+y^2\leq 1$, we count the number of these points as $N_{\text{in}}$. Then the estimatied $\hat{\pi}=4\cdot\dfrac{N_{\text{in}}}{N}$, where $N$ is the total number of sample points.
 

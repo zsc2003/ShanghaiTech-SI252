@@ -3,7 +3,7 @@
 Let $X, Y$ be jointly Gaussian random variables. Show the following equality:
 $$\E[Y | X]=L[Y | X]=\E(Y)+\dfrac{\Cov(X, Y)}{\Var(X)}(X-\E(X))$$
 
-\textcolor{blue}{Solution}
+\solution
 Firstly prove that $L[Y|X]=\E(Y)+\dfrac{\Cov(X, Y)}{\Var(X)}(X-\E(X))$: \\
 Since $L[Y|X]$ is the best linear estimator of $Y$ given $X$, we can write $L[Y|X]=a+bX$. Then we define that
 $$f(a,b) = \E[(Y - a - bX)^2] = a^2 + \E(Y^2) + b^2 \E(X^2) - 2a \E(Y) + 2ab \E(X) - 2b \E(Y)$$

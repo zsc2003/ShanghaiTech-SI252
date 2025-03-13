@@ -20,26 +20,26 @@ Let $Y_i=\log a_i+X_i$, then
 &= \int_{-\infty}^{\infty}P(Y_i=\max_{j \in\{1, \ldots, n\}} Y_j|Y_i=x)f_{Y_i}(x) \dx \qquad\text{(LOTP)} \\
 &= \int_{-\infty}^{\infty}P(Y_i=\max_{j \in\{1, \ldots, n\}} Y_j|Y_i=x)f_{X_i}(x-\log a_i) \dx \\
 &= \int_{-\infty}^{\infty}P(Y_1\leq Y_1, \ldots, Y_n\leq Y_i|Y_i=x+\log a_i)f(x) \dx \\
-&= \int_{-\infty}^{+\infty} \left(\prod_{j=1}^{n} P(X_{j} \leq x + \log a_{i} - \log a_{j})\right)f(x) \dx \\
-&= \int_{-\infty}^{+\infty} \left(\prod_{j=1}^{n} F(x + \log a_{i} - \log a_{j})\right)f(x) \dx \\
-&= \int_{-\infty}^{+\infty} \left(\prod_{j=1}^{n} \exp(- \exp(-x - \log a_{i} + \log a_{j}))\right) e^{-x}e^{-e^{-x}} \dx \\
-&= \int_{-\infty}^{+\infty} \left(\prod_{j=1}^{n} \exp(- e^{-x}\cdot e^{-\log a_{i}} \cdot e^{\log a_{j}})\right) e^{-x}e^{-e^{-x}} \dx \\
-&= \int_{-\infty}^{+\infty} \left(\prod_{j=1}^{n} \exp(- e^{-x}\cdot \frac{a_{j}}{a_{i}})\right) e^{-x}e^{-e^{-x}} \dx \\
-&= \int_{-\infty}^{+\infty} \exp\left(- e^{-x} \sum_{j=1}^{n} \frac{a_{j}}{a_{i}}\right) e^{-x}e^{-e^{-x}} \dx \\
+&= \int_{-\infty}^{+\infty} \left(\prod_{j=1,\textcolor{red}{j\neq i}}^{n} P(X_{j} \leq x + \log a_{i} - \log a_{j})\right)f(x) \dx \\
+&= \int_{-\infty}^{+\infty} \left(\prod_{j=1,\textcolor{red}{j\neq i}}^{n} F(x + \log a_{i} - \log a_{j})\right)f(x) \dx \\
+&= \int_{-\infty}^{+\infty} \left(\prod_{j=1,\textcolor{red}{j\neq i}}^{n} \exp(- \exp(-x - \log a_{i} + \log a_{j}))\right) e^{-x}e^{-e^{-x}} \dx \\
+&= \int_{-\infty}^{+\infty} \left(\prod_{j=1,\textcolor{red}{j\neq i}}^{n} \exp(- e^{-x}\cdot e^{-\log a_{i}} \cdot e^{\log a_{j}})\right) e^{-x}e^{-e^{-x}} \dx \\
+&= \int_{-\infty}^{+\infty} \left(\prod_{j=1,\textcolor{red}{j\neq i}}^{n} \exp(- e^{-x}\cdot \frac{a_{j}}{a_{i}})\right) e^{-x}e^{-e^{-x}} \dx \\
+&= \int_{-\infty}^{+\infty} \exp\left(- e^{-x} \sum_{j=1,\textcolor{red}{j\neq i}}^{n} \frac{a_{j}}{a_{i}}\right) e^{-x}e^{-e^{-x}} \dx \\
 \end{align*}
 \begin{align*}
-&= \int_{-\infty}^{+\infty} \exp\left(-u \sum_{j=1}^{n} \frac{a_{j}}{a_{i}}\right) ue^{-u} \left(-\dfrac{1}{u}\right) \du \qquad (u = e^{-x}) \\
-&= \int_{0}^{+\infty} \exp\left(- u \sum_{j=1}^{n} \frac{a_{j}}{a_{i}} - u\right) \du \\
-&= \int_{0}^{+\infty} \exp\left[- u \left(1 + \sum_{j = 1}^{n} \frac{a_{j}}{a_{i}}\right)\right] \du
+&= \int_{-\infty}^{+\infty} \exp\left(-u \sum_{j=1,\textcolor{red}{j\neq i}}^{n} \frac{a_{j}}{a_{i}}\right) ue^{-u} \left(-\dfrac{1}{u}\right) \du \qquad (u = e^{-x}) \\
+&= \int_{0}^{+\infty} \exp\left(- u \sum_{j=1,\textcolor{red}{j\neq i}}^{n} \frac{a_{j}}{a_{i}} - u\right) \du \\
+&= \int_{0}^{+\infty} \exp\left[- u \left(1 + \sum_{j=1,\textcolor{red}{j\neq i}}^{n} \frac{a_{j}}{a_{i}}\right)\right] \du
 \end{align*}
-Since the PDF of Expo($\lambda$) is $\lambda e^{-\lambda x}$, here we take $\lambda = 1 + \sum\limits_{j = 1}^{n} \dfrac{a_{j}}{a_{i}}$, so
+Since the PDF of Expo($\lambda$) is $\lambda e^{-\lambda x}$, here we take $\lambda = 1 + \sum\limits_{j=1,\textcolor{red}{j\neq i}}^{n} \dfrac{a_{j}}{a_{i}}$, so
 
 \begin{align*}
-&\ \int_{0}^{+\infty} \exp\left[- u \left(1 + \sum_{j = 1}^{n} \frac{a_{j}}{a_{i}}\right)\right] \du \\
+&\ \int_{0}^{+\infty} \exp\left[- u \left(1 + \sum_{j=1,\textcolor{red}{j\neq i}}^{n} \frac{a_{j}}{a_{i}}\right)\right] \du \\
 &= \dfrac{1}{\lambda} \int_{0}^{+\infty} \lambda\exp\left(- \lambda u\right) \du \\
 &= \dfrac{1}{\lambda} \\
-&= \dfrac{1}{1 + \sum\limits_{j = 1}^{n} \frac{a_{j}}{a_{i}}} \\
-&= \dfrac{a_{i}}{\sum\limits_{j = 1}^{n} a_{j}} \\
+&= \dfrac{1}{1 + \sum\limits_{j=1,\textcolor{red}{j\neq i}}^{n} \frac{a_{j}}{a_{i}}} \\
+&= \dfrac{a_{i}}{\sum\limits_{j=1}^{n} a_{j}} \\
 &= a_{i}.
 \end{align*}
 

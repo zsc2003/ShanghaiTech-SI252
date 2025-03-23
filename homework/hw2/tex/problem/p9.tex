@@ -1,0 +1,76 @@
+\begin{homeworkProblem}
+
+Consider a continuous-time Markov chain $\left\{X_t, t \geq 0\right\}$ with a finite discrete state space $\mathcal{X}$ and a transition rate matrix $Q=\left(q_{i, j}, i, j \in \mathcal{X}\right)$. Let
+$$p_{i, j}(t)=P\left(X_{t+s}=j \mid X_s=i\right)=P\left(X_t=j \mid X_0=i\right)$$
+Show the following results:
+
+(a) $s, t \geq 0$
+$$p_{i, j}(t+s)=\sum_{k \in \mathcal{X}} p_{i, k}(t) p_{k, j}(s)$$
+
+(b) Kolmogorov's Backward Equation:
+$$p_{i, j}^{\prime}(t)=\sum_{k \neq i} q_{i, k} p_{k, j}(t)-v_i p_{i, j}(t)$$
+where $v_i=-q_{i, i}$.
+
+(c) Kolmogorov's Forward Equation:
+$$p_{i, j}^{\prime}(t)=\sum_{k \neq j} q_{k, j} p_{i, k}(t)-v_j p_{i, j}(t)$$
+where $v_j=-q_{j, j}$.
+
+\solution
+
+(a) We can see that the Markov chain is time homogenous, and from the definition, we can get that:
+\begin{align*}
+p_{i,j}(t+s) &= P(X_{t+s}=j|X_0=i) \\
+&= \sum_{k\in\mathcal{X}} P(X_{t+s}=j|X_{t}=k, X_0=i)P(X_{t}=k|X_0=i) \quad\text{(LOTP)} \\
+&= \sum_{k\in\mathcal{X}} P(X_{t+s}=j|X_{t}=k)P(X_{t}=k|X_0=i) \qquad\qquad\ \text{(Markov property)} \\
+&= \sum_{k\in\mathcal{X}} P(X_{s}=j|X_{0}=k)P(X_{t}=k|X_0=i) \qquad\qquad\quad \text{(Time homogenous)} \\
+&= \sum_{k\in\mathcal{X}} p_{k,j}(s)p_{i,k}(t) \\
+&= \sum_{k\in\mathcal{X}} p_{i,k}(t)p_{k,j}(s)
+\end{align*}
+So above all, we have proved that $\forall s,t\geq 0$:
+$$p_{i,j}(t+s)=\sum_{k\in\mathcal{X}} p_{i,k}(t)p_{k,j}(s)$$
+
+(b) We can use the definition of derivatives:
+\begin{align*}
+p'_{i,j}(t) &= \lim_{\delta\to 0}\dfrac{p_{i,j}(t+\delta)-p_{i,j}(t)}{\delta} \\
+&= \lim_{\delta\to 0}\dfrac{\sum\limits_{k\in\mathcal{X}}p_{i,k}(\delta)p_{k,j}(t)-p_{i,j}(t)}{\delta} \qquad\text{(From (a))} \\
+&= \lim_{\delta\to 0}\dfrac{\sum\limits_{k\neq i}p_{i,k}(\delta)p_{k,j}(t)-\left[p_{i,i}(\delta)-1\right]p_{i,j}(t)}{\delta}
+\end{align*}
+For the state $i$, the rate it transfer to other states is $v_i$, i.e. let $T_i$ be the time it leaves state $i$, then we have $T_i\sim\Expo(v_i)$. Since $\delta\to 0$, so
+$$P(T_i\leq\delta)=1-e^{-v_i\delta}\approx 1-(1-v_i\delta)=v_i\delta$$
+Let $P^e=\left(p_{i,j}^e\right)$ be the transition probability matrix of the embedded chain, then if $i\neq j$, we have $q_{i,j}=v_i\cdot p_{i,j}^e$. Thus:
+$$p_{i,k}(\delta) = \begin{cases}
+P(T_i\leq\delta)\cdot p_{i,k}^e = (v_i\delta)\cdot p_{i,k}^e = q_{i,k}\cdot\delta & \text{if } k\neq i \\
+P(T_i\geq\delta) = 1 - P(T_i\leq\delta) = 1 - v_i\delta & \text{if } k=i
+\end{cases}$$
+So above all, we can get that
+\begin{align*}
+p'_{i,j}(t) &= \lim_{\delta\to 0}\dfrac{\sum\limits_{k\neq i}p_{i,k}(\delta)p_{k,j}(t)-\left[p_{i,i}(\delta)-1\right]p_{i,j}(t)}{\delta} \\
+&= \lim_{\delta\to 0}\dfrac{\sum\limits_{k\neq i}\left(q_{i,k}\cdot\delta\right)p_{k,j}(t)-\left[\left(1 - v_i\delta\right) -1\right]p_{i,j}(t)}{\delta} \\
+&= \sum_{k \neq i} q_{i, k} p_{k, j}(t)-v_i p_{i, j}(t)
+\end{align*}
+Which means that the Kolmogorov's Backward Equation holds:
+$$p'_{i,j}(t)=\sum_{k \neq i} q_{i, k} p_{k, j}(t)-v_i p_{i, j}(t)$$
+
+(c) Similarly with the backward equation, for the state $k$, the rate it transfer to other states is $v_k$, i.e. let $T_k$ be the time it leaves state $k$, then we have $T_k\sim\Expo(v_k)$. Since $\delta\to 0$, so
+$$P(T_k\leq\delta)=1-e^{-v_k\delta}\approx 1-(1-v_k\delta)=v_k\delta$$
+Let $P^e=\left(p_{i,j}^e\right)$ be the transition probability matrix of the embedded chain, then if $i\neq j$, we have $q_{i,j}=v_i\cdot p_{i,j}^e$. Thus:
+\begin{equation}
+p_{k,j}(\delta) = \begin{cases}
+P(T_k\leq\delta)\cdot p_{k,j}^e = (v_k\delta)\cdot p_{k,j}^e = q_{k,j}\cdot\delta & \text{if } k\neq j \\
+P(T_k\geq\delta) = 1 - P(T_k\leq\delta) = 1 - v_k\delta = 1 - v_j\delta & \text{if } k=j
+\end{cases}
+\end{equation}
+So above all, we can get that
+\begin{align*}
+p'_{i,j}(t) &= \lim_{\delta\to 0}\dfrac{p_{i,j}(t+\delta)-p_{i,j}(t)}{\delta} \\
+&\stackrel{(a)}{=} \lim_{\delta\to 0}\dfrac{\sum\limits_{k\in\mathcal{X}}p_{i,k}(t)p_{k,j}(\delta)-p_{i,j}(\delta)}{\delta} \\
+&= \lim_{\delta\to 0}\dfrac{\sum\limits_{k\neq j}p_{k,j}(\delta)p_{i,k}(t)-\left[p_{j,j}(\delta)-1\right]p_{i,j}(t)}{\delta} \\
+&\stackrel{(1)}{=} \lim_{\delta\to 0}\dfrac{\sum\limits_{k\neq j}\left(q_{k,j}\cdot\delta\right)p_{i,k}(t)-\left[\left(1 - v_j\delta\right) -1\right]p_{i,j}(t)}{\delta} \\
+&= \sum_{k \neq j} q_{k,j}p_{i,k}(t)-v_j p_{i, j}(t)
+\end{align*}
+Which means that the Kolmogorov's Forward Equation holds:
+$$p_{i, j}^{\prime}(t)=\sum_{k \neq j} q_{k, j} p_{i, k}(t)-v_j p_{i, j}(t)$$
+
+\end{homeworkProblem}
+
+\newpage

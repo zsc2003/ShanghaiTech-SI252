@@ -1,0 +1,66 @@
+\begin{homeworkProblem}
+
+[BH Chapter 11, Problem 14]. There are two urns with a total of $2 N$ distinguishable balls. Initially, the first urn has $N$ white balls and the second urn has $N$ black balls. At each stage, we pick a ball at random from each urn and interchange them. Let $X_n$ be the number of black balls in the first urn at time $n$. This is a Markov chain on the state space $\{0,1, \ldots, N\}$.
+
+(a) Give the transition probabilities of the chain.
+
+(b) Show that $\left(s_0, s_1, \ldots, s_N\right)$ where
+$$s_i=\dfrac{\binom{N}{i}\binom{N}{N-i}}{\binom{2N}{N}}$$
+is the stationary distribution, by verifying the reversibility condition.
+
+\solution
+
+(a) Let $Q=(q_{i,j})$ be the transition matrix of the chain. Since each time one ball from each urn is picked and interchanged, the number of black balls in the first urn can only change by 1, which means $q_{i,j}=0$ for $|i-j|>1$. \\
+And when $|i-j|\leq 1$: \\
+If there are $i$ black balls in the first urn, then there are $N-i$ white balls in the first urn; $i$ white balls, $N-i$ black balls in the second urn. \\
+Let $B_1$ be the event that a black ball is picked from the first urn, $B_2$ be the event that a black ball is picked from the second urn. Thus the transition probabilities are:
+\begin{align*}
+q_{i,i+1} &= P(X_{n+1}=i+1|X_n=i) = P(B_1^c)P(B_2) = \dfrac{N-i}{N}\dfrac{N-i}{N} = \dfrac{\left(N-i\right)^2}{N^2} \\
+q_{i,i} &= P(X_{n+1}=i|X_n=i) = P(B_1)P(B_2) + P(B_1^c)P(B_2^c) = \dfrac{N-i}{N}\dfrac{i}{N} + \dfrac{i}{N}\dfrac{N-i}{N} = \dfrac{2i(N-i)}{N^2} \\
+q_{i,i-1} &= P(X_{n+1}=i-1|X_n=i) = P(B_1)P(B_2^c) = \dfrac{i}{N}\dfrac{i}{N} = \dfrac{i^2}{N^2} \\
+q_{i,j} &= 0 \quad \text{, for} \quad |i-j|>1
+\end{align*}
+
+(b) To verify the reversibility condition, we need to verify that
+$$s_iq_{i,j} = s_jq_{j,i} \Rightarrow \dfrac{s_i}{s_j} = \dfrac{q_{j,i}}{q_{i,j}}$$
+And from the definition of $s_i$, we know that $s_i\neq 0$, and
+$$\dfrac{s_i}{s_j} = \dfrac{\binom{N}{i}\binom{N}{N-i}}{\binom{N}{j}\binom{N}{N-j}} = \left(\dfrac{j!(N-j)!}{i!(N-i)!}\right)^2$$
+It is obvious that $s_iq_{i,j} = s_jq_{j,i}$ holds when $|i-j|>1$, as $q_{i,j}=q_{j,i}=0$, so the reversibility condition holds. So we just consider the situations $q_{i,j}\neq 0$, i.e. $|i-j|\leq 1$:
+\begin{itemize}
+\item When $j=i+1$:
+\begin{align*}
+\dfrac{s_i}{s_j} &= \left(\dfrac{(i+1)!(N-i-1)!}{i!(N-i)!}\right)^2=\left(\dfrac{i+1}{N-i}\right)^2 \\
+\dfrac{q_{j,i}}{q_{i,j}} &= \dfrac{q_{i+1,i}}{q_{i,i+1}}=\dfrac{\dfrac{(i+1)^2}{N^2}}{\dfrac{(N-i)^2}{N^2}}=\left(\dfrac{i+1}{N-i}\right)^2 \\
+\Rightarrow \dfrac{s_i}{s_j} &= \dfrac{q_{j,i}}{q_{i,j}}
+\end{align*}
+
+\item When $j=i$:
+\begin{align*}
+\dfrac{s_i}{s_j} &= \dfrac{s_i}{s_i} = 1 \\
+\dfrac{q_{j,i}}{q_{i,j}} &= \dfrac{q_{i,i}}{q_{i,i}}=1 \\
+\Rightarrow \dfrac{s_i}{s_j} &= \dfrac{q_{j,i}}{q_{i,j}}
+\end{align*}
+
+\item When $j=i-1$:
+\begin{align*}
+\dfrac{s_i}{s_j} &= \left(\dfrac{(i-1)!(N-i+1)!}{i!(N-i)!}\right)^2=\left(\dfrac{N-i+1}{i}\right)^2 \\
+\dfrac{q_{j,i}}{q_{i,j}} &= \dfrac{q_{i-1,i}}{q_{i,i-1}}=\dfrac{\dfrac{(N-i+1)^2}{N^2}}{\dfrac{i^2}{N^2}}=\left(\dfrac{N-i+1}{i}\right)^2 \\
+\Rightarrow \dfrac{s_i}{s_j} &= \dfrac{q_{j,i}}{q_{i,j}}
+\end{align*}
+\end{itemize}
+
+So above all, we have proved that the reversibility condition
+$$s_iq_{i,j} = s_jq_{j,i}$$
+always holds.
+
+Also, we can use the story proof: To take out $N$ ball from $2N$ balls without replacement and order, there are total $\binom{2N}{N}$ ways. Also, we can regard it as taking $i$ balls from first $N$ balls and taking $N-i$ balls from the rest $N$ balls, where $i\in\{0,1,\ldots,N\}$. So we use the story proof to prove that
+\begin{align*}
+\binom{2N}{N} &= \sum_{i=0}^N \binom{N}{i}\binom{N}{N-i} \\
+\Rightarrow \sum_{i=0}^N s_i &= 1
+\end{align*}
+
+So above all, it is obvious that $\forall i, s_i\geq 0$, and we have proved that $\sum\limits_{i=0}^N s_i = 1$, and $\forall i,j, s_iq_{i,j} = s_jq_{j,i}$, so $\left(s_0, s_1, \ldots, s_N\right)$ is the stationary distribution.
+
+\end{homeworkProblem}
+
+\newpage

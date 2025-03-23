@@ -1,0 +1,76 @@
+\begin{homeworkProblem}
+
+Given a three-state CTMC with transition rates between states shown in the following diagram:
+\begin{center}
+\begin{tikzpicture}[->, >=stealth, auto, thick, node distance=2cm]
+    \tikzstyle{every state} = [
+        fill=blue!20,
+        draw=black,
+        circle,
+        minimum size=25pt,
+        font=\large\bfseries
+    ]
+
+    \node[state] (1) at (0, 2) {1};
+    \node[state] (2) at (-2,  0) {2};
+    \node[state] (3) at (2,  0) {3};
+
+    % 1 <-> 2
+    \path (1) edge[right]  node{$q_{1,2}$} (2);
+    \path (2) edge[bend left=30] node{$q_{2,1}$} (1);
+
+    % 2 <-> 3
+    \path (2) edge[above]  node{$q_{2,3}$} (3);
+    \path (3) edge[bend left=30] node{$q_{3,2}$} (2);
+
+    % 1 <-> 3
+    \path (1) edge[bend left=30, right]  node{$q_{1,3}$} (3);
+    \path (3) edge[left] node{$q_{3,1}$} (1);
+
+\end{tikzpicture}
+\end{center}
+Find holding time for each state, transition probability matrix of embedded chain, and the generator matrix.
+
+\solution
+
+Since for the generation matrix of CTMC, each row $i$ has the property that $\sum\limits_{j=1}^{n}q_{i,j}=0$, and from the diagram of the CTMC, we can get that $q_{i,i}=-\sum\limits_{j\neq i}q_{i,j}$. So we can get the generation matrix:
+$$Q = \begin{pmatrix}
+-q_{1,2}-q_{1,3} & q_{1,2} & q_{1,3} \\
+q_{2,1} & -q_{2,1}-q_{2,3} & q_{2,3} \\
+q_{3,1} & q_{3,2} & -q_{3,1}-q_{3,2}
+\end{pmatrix}$$
+
+The praamerter of the holding time for each state is
+$$v_i=\sum\limits_{j\neq i}q_{i,j}$$
+And the holding time for each state is
+$$T_i\sim\Expo(v_i)$$
+
+The transition probability matrix of the embedded chain is
+$$p_{i,j}^e=\begin{cases}
+\dfrac{q_{i,j}}{v_i} & i\neq j \\
+0 & i=j
+\end{cases}
+\Rightarrow P^e = \begin{pmatrix}
+0 & \frac{q_{1,2}}{q_{1,2}+q_{1,3}} & \frac{q_{1,3}}{q_{1,2}+q_{1,3}} \\
+\frac{q_{2,1}}{q_{2,1}+q_{2,3}} & 0 & \frac{q_{2,3}}{q_{2,1}+q_{2,3}} \\
+\frac{q_{3,1}}{q_{3,1}+q_{3,2}} & \frac{q_{3,2}}{q_{3,1}+q_{3,2}} & 0
+\end{pmatrix}$$
+
+So above all, the holding time for each state is
+$$T_1\sim\Expo(q_{1,2}+q_{1,3}), T_2\sim\Expo(q_{2,1}+q_{2,3}), T_3\sim\Expo(q_{3,1}+q_{3,2})$$
+The transition probability matrix of the embedded chain is
+$$P^e = \begin{pmatrix}
+0 & \frac{q_{1,2}}{q_{1,2}+q_{1,3}} & \frac{q_{1,3}}{q_{1,2}+q_{1,3}} \\
+\frac{q_{2,1}}{q_{2,1}+q_{2,3}} & 0 & \frac{q_{2,3}}{q_{2,1}+q_{2,3}} \\
+\frac{q_{3,1}}{q_{3,1}+q_{3,2}} & \frac{q_{3,2}}{q_{3,1}+q_{3,2}} & 0
+\end{pmatrix}$$
+And the generator matrix is
+$$Q = \begin{pmatrix}
+-q_{1,2}-q_{1,3} & q_{1,2} & q_{1,3} \\
+q_{2,1} & -q_{2,1}-q_{2,3} & q_{2,3} \\
+q_{3,1} & q_{3,2} & -q_{3,1}-q_{3,2}
+\end{pmatrix}$$
+
+\end{homeworkProblem}
+
+\newpage

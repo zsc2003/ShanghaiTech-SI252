@@ -1,0 +1,66 @@
+\begin{homeworkProblem}
+
+[BH Chapter 11, Problem 4]. Consider the Markov chain shown below, where $0<p<1$ and the labels on the arrows indicate transition probabilities.
+\begin{center}
+\begin{tikzpicture}[->, >=stealth, auto, thick, node distance=2cm]
+    \tikzstyle{every state} = [
+        fill=blue!20,
+        draw=black,
+        circle,
+        minimum size=25pt,
+        font=\large\bfseries
+    ]
+
+    \node[state] (1) at (-2, 0) {1};
+    \node[state] (2) at (2,  0) {2};
+
+    % self loop
+    \path (1) edge[loop above]  node{$p$} (1);
+    \path (2) edge[loop above]  node{$p$} (2);
+
+    % 1 <-> 2
+    \path (1) edge[above]  node{$1-p$} (2);
+    \path (2) edge[bend left=30] node{$1-p$} (1);
+\end{tikzpicture}
+\end{center}
+
+(a) Write down the transition matrix $Q$ for this chain.
+
+(b) Find the stationary distribution of the chain.
+
+(c) What is the limit of $Q^n$ as $n \rightarrow \infty$?
+
+\solution
+
+(a) The transition matrix for this chain is:
+$$Q=\begin{pmatrix}
+p & 1-p \\
+1-p & p
+\end{pmatrix}$$
+
+(b) Suppose the stationary distribution is $\bpi=(\pi_1,\pi_2)$, then we have:
+\begin{align*}
+\bpi = \bpi Q &\Rightarrow \begin{cases}
+\pi_1 = p\pi_1 + (1-p)\pi_2 \\
+\pi_2 = (1-p)\pi_1 + p\pi_2
+\end{cases} \\
+\pi_1 + \pi_2 &= 1
+\end{align*}
+
+Solve the equations, we can get the stationary distribution:
+$$\bpi = \left(\frac{1}{2}, \frac{1}{2}\right)$$
+
+(c) It is obvious that the chain is irreducible, and since there exists self loops, the chain is aperiodic. So the chain is ergodic. Then from the Fundamental Limit Theorem for Ergodic Markov Chains, we have for the stationary distribution $\bpi$:
+$$\pi_j=\lim_{n\to\infty} Q^n_{ij}$$
+So the limit of $Q^n$ as $n \rightarrow \infty$ is:
+$$\lim_{n\to\infty} Q^n = \begin{pmatrix}
+\pi_1 & \pi_2 \\
+\pi_1 & \pi_2
+\end{pmatrix}= \begin{pmatrix}
+\frac{1}{2} & \frac{1}{2} \\
+\frac{1}{2} & \frac{1}{2}
+\end{pmatrix}$$
+
+\end{homeworkProblem}
+
+\newpage

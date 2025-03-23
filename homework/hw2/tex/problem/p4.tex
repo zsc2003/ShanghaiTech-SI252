@@ -1,0 +1,110 @@
+\begin{homeworkProblem}
+
+
+[BH Chapter 11, Problem 7]. A Markov chain $X_0, X_1, \ldots$ with state space $\{-3,-2,-1,0,1,2,3\}$ proceeds as follows. The chain starts at $X_0=0$. If $X_n$ is not an endpoint (-3 or 3), then $X_{n+1}$ is $X_n-1$ or $X_n+1$, each with probability $\dfrac{1}{2}$. Otherwise, the chain gets reflected off the endpoint, i.e., from 3 it always goes to 2 and from -3 it always goes to -2. A diagram of the chain is shown below.
+\begin{center}
+\begin{tikzpicture}[->, >=stealth, auto, thick, node distance=2cm]
+    \tikzstyle{every state} = [
+        fill=blue!20,
+        draw=black,
+        circle,
+        minimum size=25pt,
+        font=\large\bfseries
+    ]
+
+    \node[state] (1) at (-6, 0) {-3};
+    \node[state] (2) at (-4,  0) {-2};
+    \node[state] (3) at (-2,  0) {-1};
+    \node[state] (4) at (0,  0) {0};
+    \node[state] (5) at (2,  0) {1};
+    \node[state] (6) at (4,  0) {2};
+    \node[state] (7) at (6,  0) {3};
+
+    % -3 <-> -2 <-> -1 <-> 0 <-> 1 <-> 2 <-> 3
+    \path (1) edge (2); \path (2) edge (1);
+    \path (2) edge (3); \path (3) edge (2);
+    \path (3) edge (4); \path (4) edge (3);
+    \path (4) edge (5); \path (5) edge (4);
+    \path (5) edge (6); \path (6) edge (5);
+    \path (6) edge (7); \path (7) edge (6);
+\end{tikzpicture}
+\end{center}
+
+(a) Is $\left|X_0\right|,\left|X_1\right|,\left|X_2\right|, \ldots$ also a Markov chain? Explain. \\
+Hint: For both (a) and (b), think about whether the past and future are conditionally independent given the present; don't do calculations with a 7 by 7 transition matrix!
+
+(b) Let $\sgn$ be the sign function: $\sgn(x)=1$ if $x>0, \sgn(x)=-1$ if $x<0$, and $\sgn(0)=0$. Is $\sgn\left(X_0\right), \sgn\left(X_1\right), \sgn\left(X_2\right), \ldots$ a Markov chain? Explain.
+
+(c) Find the stationary distribution of the chain $X_0, X_1, X_2, \ldots$.
+
+(d) Find a simple way to modify some of the transition probabilities $q_{i,j}$ for $i \in\{-3,3\}$ to make the stationary distribution of the modified chain uniform over the states.
+
+\solution
+
+(a) Let $Y_n=\left|X_n\right|$. Since the chain starts at $X_0=0$, and the chain is symmetric about state $0$, we have
+\begin{align*}
+P(X_n=y_n) &= P(X_n=-y_n) \\
+P(X_n=y_n|\left|X_n\right|=y_n) &= P(X_n=-y_n|\left|X_n\right|=y_n) = \dfrac{1}{2} \\
+P(X_n=y_n|\left|X_n\right|=y_n,\ldots,\left|X_0\right|=y_0) &= P(X_n=-y_n|\left|X_n\right|=y_n,\ldots,\left|X_0\right|=y_0) = \dfrac{1}{2}
+\end{align*}
+Although when $y_n=0$, $-y_n=y_n$, but for a better consistency when using LOTP, we can keep this format, then we have
+\begin{align*}
+&\quad\ P(Y_{n+1}=y_{n+1}|Y_n=y_n,\ldots,Y_0=y_0) \\
+&= P(|X_{n+1}|=y_{n+1}|\left|X_n\right|=y_n,\ldots,\left|X_0\right|=y_0) \\
+&\stackrel{\text{LOTP}}{=} P(\left|X_{n+1}\right|=y_{n+1}|X_n=y_n, \left|X_n\right|=y_n,\ldots,\left|X_0\right|=y_0)P(X_n=y_n|\left|X_n\right|=y_n,\ldots,\left|X_0\right|=y_0) \\
+&+ P(\left|X_{n+1}\right|=y_{n+1}|X_n=-y_n, \left|X_n\right|=y_n,\ldots,\left|X_0\right|=y_0)P(X_n=-y_n|\left|X_n\right|=y_n,\ldots,\left|X_0\right|=y_0) \\
+&\stackrel{\text{symmetric}}{=} \dfrac{1}{2}\left[P(\left|X_{n+1}\right|=y_{n+1}|X_n=y_n, \left|X_n\right|=y_n,\ldots,\left|X_0\right|=y_0)+P(\left|X_{n+1}\right|=y_{n+1}|X_n=-y_n, \left|X_n\right|=y_n,\ldots,\left|X_0\right|=y_0)\right] \\
+&\stackrel{\text{Markov property}}{=} \dfrac{1}{2}\left[P(\left|X_{n+1}\right|=y_{n+1}|X_n=y_n)+P(\left|X_{n+1}\right|=y_{n+1}|X_n=-y_n)\right] \\
+&= P(\left|X_{n+1}\right|=y_{n+1}|X_n=y_n)P(X_n=y_n|\left|X_n\right|=y_n) + P(\left|X_{n+1}\right|=y_{n+1}|X_n=-y_n)P(X_n=-y_n|\left|X_n\right|=y_n) \\
+&\stackrel{\text{LOTP}}{=} P(\left|X_{n+1}\right|=y_{n+1}|\left|X_n\right|=y_n) \\
+&= P(Y_{n+1}=y_{n+1}|Y_n=y_n)
+\end{align*}
+So above all, $\left|X_0\right|,\left|X_1\right|,\left|X_2\right|, \ldots$ is a Markov chain.
+
+(b) Let $Q=(q_{i,j})$ be the transition matrix, then for example
+$$P(\sgn(X_{2})=1|\sgn(X_1)=1)=P(X_2\geq 1|X_1\geq 1,|X_2-X_1|=1)=q_{1,2}+q_{2,3}+q_{2,1}+q_{3,2}$$
+However, if we have more information about the past, for example
+$$P(\sgn(X_{2})=1|\sgn(X_1)=1,\sgn(X_0)=0)=P(X_2=2|X_1=1,X_0=0)=q_{1,2}$$
+So in the we have given an example that
+$$P(\sgn(X_{2})=1|\sgn(X_1)=1,\sgn(X_0)=0)\neq P(\sgn(X_{2})=1|\sgn(X_1)=1)$$
+So $\sgn\left(X_0\right), \sgn\left(X_1\right), \sgn\left(X_2\right), \ldots$ is not a Markov chain.
+
+(c) Let $Q=(q_{i,j})$ be the transition matrix, $\bpi=(\pi_i)$ be the stationary distribution, $i=-3,-2,-1,0,1,2,3$. Then we have the transition matrix is
+$$Q=\begin{pmatrix}
+0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+\frac{1}{2} & 0 & \frac{1}{2} & 0 & 0 & 0 & 0 \\
+0 & \frac{1}{2} & 0 & \frac{1}{2} & 0 & 0 & 0 \\
+0 & 0 & \frac{1}{2} & 0 & \frac{1}{2} & 0 & 0 \\
+0 & 0 & 0 & \frac{1}{2} & 0 & \frac{1}{2} & 0 \\
+0 & 0 & 0 & 0 & \frac{1}{2} & 0 & \frac{1}{2} \\
+0 & 0 & 0 & 0 & 0 & 1 & 0
+\end{pmatrix}$$
+For the stationary distribution, we have
+$$\bpi = \bpi Q \Rightarrow \begin{cases}
+\pi_{-3} = \frac{1}{2}\pi_{-2} \\
+\pi_{-2} = \pi_{-3} + \frac{1}{2}\pi_{-1} \\
+\pi_{-1} = \frac{1}{2}\pi_{-2} + \frac{1}{2}\pi_{0} \\
+\pi_{0} = \frac{1}{2}\pi_{-1} + \frac{1}{2}\pi_{1} \\
+\pi_{1} = \frac{1}{2}\pi_{0} + \frac{1}{2}\pi_{2} \\
+\pi_{2} = \frac{1}{2}\pi_{1} + \pi_{3} \\
+\pi_{3} = \frac{1}{2}\pi_{2} \\
+\sum\limits_{i=-3}^{3}\pi_i = 1
+\end{cases}$$
+Solve above equations, we can get the stationary distribution is
+$$\bpi = \dfrac{1}{12}\left(1,2,2,2,2,2,1\right)=\left(\frac{1}{12},\frac{1}{6},\frac{1}{6},\frac{1}{6},\frac{1}{6},\frac{1}{6},\frac{1}{12}\right)$$
+
+(d) From the theorem we have known, if $Q$ is a double stochastic matrix, then the stationary distribution is uniform. So we can modify the transition matrix $Q$ into a symmetric matrix easily. i.e. for the state $-3$, it has probability $\frac{1}{2}$ to go to $-2$ and stay at $-3$, and similarly for the state $3$. So the modified transition matrix is
+$$Q'=\begin{pmatrix}
+\textcolor{red}{\frac{1}{2}} & \textcolor{red}{\frac{1}{2}} & 0 & 0 & 0 & 0 & 0 \\
+\frac{1}{2} & 0 & \frac{1}{2} & 0 & 0 & 0 & 0 \\
+0 & \frac{1}{2} & 0 & \frac{1}{2} & 0 & 0 & 0 \\
+0 & 0 & \frac{1}{2} & 0 & \frac{1}{2} & 0 & 0 \\
+0 & 0 & 0 & \frac{1}{2} & 0 & \frac{1}{2} & 0 \\
+0 & 0 & 0 & 0 & \frac{1}{2} & 0 & \frac{1}{2} \\
+0 & 0 & 0 & 0 & 0 & \textcolor{red}{\frac{1}{2}} & \textcolor{red}{\frac{1}{2}}
+\end{pmatrix}$$
+Then the stationary distribution of the modified chain is uniform over the states.
+
+\end{homeworkProblem}
+
+\newpage

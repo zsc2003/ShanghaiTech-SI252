@@ -1,0 +1,50 @@
+\begin{homeworkProblem}
+
+[BH Chapter 11, Problem 6]. Daenerys has three dragons: Drogon, Rhaegal, and Viserion. Each dragon independently explores the world in search of tasty morsels. Let $X_n, Y_n, Z_n$ be the locations at time $n$ of Drogon, Rhaegal, Viserion respectively, where time is assumed to be discrete and the number of possible locations is a finite number $M$. Their paths $X_0, X_1, X_2 \ldots$; $Y_0, Y_1, Y_2, \ldots ;$ and $Z_0, Z_1, Z_2, \ldots$ are independent Markov chains with the same stationary distribution $\mathbf{s}$. Each dragon starts out at a random location generated according to the stationary distribution.
+
+(a) Let state 0 be home (so $s_0$ is the stationary probability of the home state). Find the expected number of times that Drogon is at home, up to time 24, i.e., the expected number of how many of $X_0, X_1, \ldots, X_{24}$ are state 0 (in terms of $s_0$ ).
+
+(b) If we want to track all 3 dragons simultaneously, we need to consider the vector of positions, $\left(X_n, Y_n, Z_n\right)$. There are $M^3$ possible values for this vector; assume that each is assigned a number from 1 to $M^3$, e.g., if $M=2$ we could encode the statex $(0,0,0),(0,0,1),(0,1,0), \ldots,(1,1,1)$ as $1,2,3, \ldots, 8$ respectively. Let $W_n$ be the number between 1 and $M^3$ representing ($X_n, Y_n, Z_n$). Determine whether $W_0, W_1, \ldots$ is a Markov chain.
+
+(c) Given that all 3 dragons start at home at time 0, find the expected time it will take for all 3 to be at home again at the same time.
+
+\solution
+
+(a) Let the indicator $\I_i$ denote whether $X_i=0$, and $N$ be the number of $X_0,\ldots,X_{24}$ equal to 0. Since the initial state $X_0$ follows the stationary distribution, so $X_1,\ldots,X_{24}$ also follow the stationary distribution. i.e.
+$$P(X_i=0)=s_0, \forall i\in\{0,\ldots,24\}$$
+Then we can get that:
+$$\E[N] = \E\left[\sum_{i=0}^{24} \I_i\right] = \sum_{i=0}^{24} \E\left[\I_i\right] = \sum_{i=0}^{24} P(X_i=0) = \sum_{i=0}^{24} s_0 = 25s_0$$
+
+(b) $W_i=w_i$ and $(X_i,Y_i,Z_i)=(x_i,y_i,z_i)$ correspond one-to-one, so
+\begin{align*}
+&\quad\ P(W_{n+1}=w_{n+1}|W_0=w_0,\ldots,W_n=w_n) \\
+&= P(X_{n+1}=x_{n+1},Y_{n+1}=y_{n+1},Z_{n+1}=z_{n+1}|X_n=x_n,\ldots,X_0=x_0,Y_n=y_n,\ldots,Y_0=y_0,Z_n=z_n,\ldots,Z_0=z_0) \\
+&= P(X_{n+1}=x_{n+1}|X_n=x_n,\ldots,X_0=x_0)P(Y_{n+1}=y_{n+1}|Y_n=y_n,\ldots,Y_0=y_0)P(Z_{n+1}=z_{n+1}|Z_n=z_n,\ldots,Z_0=z_0) \\
+&= P(X_{n+1}=x_{n+1}|X_n=x_n)P(Y_{n+1}=y_{n+1}|Y_n=y_n)P(Z_{n+1}=z_{n+1}|Z_n=z_n) \\
+&= P(X_{n+1}=x_{n+1},Y_{n+1}=y_{n+1},Z_{n+1}=z_{n+1}|X_n=x_n,Y_n=y_n,Z_n=z_n) \\
+&= P(W_{n+1}=w_{n+1}|W_n=w_n)
+\end{align*}
+The second equality and the second to last equality hold due to the the paths are independent markov chains. So $W_0, W_1, \ldots$ is a Markov chain.
+
+(c) Let $N_t$ be the number of times that all 3 dragons are at home from time $1$ to time $t$. And let $T_i$ be the time interval between the $(i-1)$-th time that all 3 dragons are at home and the $i$-th. Here we define that $X_0=0$ is the $0$-th time that all 3 dragons are at home. Let $T$ be the first time all 3 dragons are at home. From the Markov property, we can get that $T, T_1, \ldots$ are i.i.d. random variables. From the large number of law, we have
+$$\E(T)=\lim_{n\to\infty}\dfrac{T_1+\ldots+T_n}{n}=\lim_{t\to+\infty}\dfrac{T_1+\ldots+T_{N_t}}{N_t}$$
+We can also get that
+\begin{align*}
+T_1+\ldots+T_{N_{t}} &\leq t \leq T_1+\ldots+T_{N_{t+1}} \\
+\implies \lim_{t\to+\infty}\dfrac{T_1+\ldots+T_{N_{t}}}{N_{t}} &\leq \lim_{t\to+\infty}\dfrac{t}{N_{t}} \leq \lim_{t\to+\infty}\dfrac{T_1+\ldots+T_{N_{t+1}}}{N_{t+1}}
+\end{align*}
+Since $\lim\limits_{t\to+\infty}\dfrac{T_1+\ldots+T_{N_{t}}}{N_{t}}=\E(T)$, and $\lim\limits_{t\to+\infty}\dfrac{T_1+\ldots+T_{N_{t+1}}}{N_{t+1}}=\E(T)$, we have
+$$\lim_{t\to+\infty}\dfrac{t}{N_t}=\E(T)$$
+From the property as the stationary distribution of the Markov chain, we have the stationary distribution of $W_0, W_1, \ldots$ has
+$$P(W_i=0)=P(X_i=0)P(Y_i=0)P(Z_i=0)=s_0^3$$
+Thus we have
+\begin{align*}
+s_0^3=\lim_{t\to+\infty}\dfrac{N_t}{t} &= \dfrac{1}{\E(T)} \\
+\implies \E(T) &= \dfrac{1}{s_0^3}
+\end{align*}
+
+So above all, the expected time for all 3 dragons to be at home again at the same time is $\dfrac{1}{s_0^3}$.
+
+\end{homeworkProblem}
+
+\newpage

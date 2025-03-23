@@ -1,0 +1,28 @@
+\begin{homeworkProblem}
+
+[BH Chapter 11, Problem 8]. Let $G$ be an undirected network with nodes labeled $1,2, \ldots, M$ (edges from a node to itself are not allowed), where $M \geq 2$ and random walk on this network is irreducible. Let $d_j$ be the degree of node $j$ for each $j$. Create a Markow chain on the state space $1,2, \ldots, M$, with transitions as follows. From state $i$, generate a proposal $j$ by choosing a uniformly random $j$ such that there is an edge between $i$ and $j$ in $G$; then go to $j$ with probability $\min \left(\frac{d_i}{d_j}, 1\right)$, and stay at $i$ otherwise.
+
+(a) Find the transition probability $q_{i,j}$ from $i$ to $j$ for this chain, for all states $i, j$.
+
+(b) Find the stationary distribution of this chain.
+
+\solution
+
+(a) Define $\mathcal{N}(i)$ be the set of neighbors of node $i$, i.e. there has edges between $i$ and $j$. If $j\not\in \mathcal{N}(i)$ and $j\neq i$, then $q_{i,j}=0$. \\
+If $j\in \mathcal{N}(i)$, then the probability to go from $i$ to $j$ is $\dfrac{1}{d_i}\cdot\min\left(\frac{d_i}{d_j},1\right)=\dfrac{1}{\max(d_i,d_j)}$. \\
+Since it has a probability $1-\min\left(\frac{d_i}{d_j},1\right)$ to stay at $i$, so $q_{i,i}=1-\sum\limits_{j\in\mathcal{N}(i)}\dfrac{1}{\max(d_i,d_j)}$. \\
+So above all, the transition probability $q_{i,j}$ from $i$ to $j$ is:
+$$ q_{i,j} = P(X_{n+1}=j|X_n=i) = \begin{cases}
+\dfrac{1}{\max(d_i,d_j)} & \text{, if } j\in\mathcal{N}(i) \\
+1 - \sum\limits_{j\in\mathcal{N}(i)}\dfrac{1}{\max(d_i,d_j)} & \text{, if } i=j \\
+0 & \text{, otherwise}
+\end{cases}$$
+
+(b) Since if $q_{i,j}>0,i\neq j$, then $j\in\mathcal{N}(i) \Rightarrow i\in\mathcal{N}(j)$, and $q_{i,j}=\dfrac{1}{\max(d_i,d_j)}=q_{j,i}$, so the transition matrix $Q$ is symmetric. Thus the sum of each row $i$ of $Q$ is:
+$$\sum_{j=1}^M q_{j,i} = \sum_{j=1}^M q_{i,j} = 1$$
+Which means that $Q$ is a double stochastic matrix. Thus the stationary distribution is the uniform distribution:
+$$(s_1,s_2,\ldots,s_M) = \left(\dfrac{1}{M},\ldots,\dfrac{1}{M}\right)$$
+
+\end{homeworkProblem}
+
+\newpage

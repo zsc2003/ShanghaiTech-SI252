@@ -1,0 +1,91 @@
+\begin{homeworkProblem}
+
+[BH Chapter 11, Problem 2]. Let $X_0, X_1, X_2 \ldots$ be an irreducible Markov chain with state space $\{1,2, \ldots, M\}$. $M \geq 3$, transition matrix $Q=\left(q_{i,j}\right)$, and stationary distribution $\mathbf{s}=\left(s_1, \ldots, s_M\right)$. Let the initial state $X_0$ follow the stationary distribution, i.e., $P\left(X_0=i\right)=s_i$.
+
+(a) On average, how many of $X_0, X_1, \ldots, X_9$ equal 3? (In terms of $\mathbf{s}$; simplify.)
+
+(b) Let $Y_n=\left(X_n-1\right)\left(X_n-2\right)$. For $M=3$, find an example of $Q$ (the transition matrix for the \textit{original} chain $X_0, X_1, \ldots$ ) where $Y_0, Y_1, \ldots$ is Markov, and another example of $Q$ where $Y_0, Y_1, \ldots$ is not Markov. In your examples, make $q_{i,i}>0$ for at least one $i$ and make sure it is possible to get from any state to any other state eventually.
+
+\solution
+
+(a) Let the indicator $\I_i$ donate wheher $X_i=3$, and $N$ be the number of $X_0,\ldots,X_9$ equal to 3. Since the initial state $X_0$ follows the stationary distribution, so $X_1,\ldots,X_9$ also follow the stationary distribution. i.e.
+$$P(X_i=3)=s_3, \forall i\in\{0,\ldots,9\}$$
+Then we can get that:
+$$\E[N] = \E\left[\sum_{i=0}^9 \I_i\right] = \sum_{i=0}^9 \E\left[\I_i\right] = \sum_{i=0}^9 P(X_i=3) = \sum_{i=0}^9 s_3 = 10s_3$$
+
+(b) Since $M=3$, and the relationship between $X_i$ and $Y_i$ is:
+\begin{align*}
+X_i=1 &\Rightarrow Y_i=0 \\
+X_i=2 &\Rightarrow Y_i=0 \\
+X_i=3 &\Rightarrow Y_i=2
+\end{align*}
+Define $g(y)$ be a set of values of $x$ such that $Y=g(X)$. i.e. $g(0)=\{1,2\}, g(2)=\{3\}$.
+
+To let $Y_0,Y_1,\ldots$ be Markov, we need to make sure that
+$$P(Y_{n+1}=y_{n+1}|Y_n=y_n,\ldots,Y_0=y_0) = P(Y_{n+1}=y_{n+1}|Y_n=y_n)$$
+Since $Y_i$ have $2$ possible values, so we can discuss them in $4$ cases:
+\begin{itemize}
+\item $Y_{n+1}=2$, $Y_n=2$:
+\begin{align*}
+&\quad\ P(Y_{n+1}=2|Y_n=2,Y_{n-1}=y_{n-1},\ldots,Y_0=y_0) \\
+&= P(X_{n+1}=3|X_n=3,X_{n-1}=x_{n-1},\ldots,X_0=x_0) \\
+&= P(X_{n+1}=3|X_n=3) \\
+&= P(Y_{n+1}=2|Y_n=2)
+\end{align*}
+
+\item $Y_{n+1}=0$, $Y_n=2$:
+\begin{align*}
+&\quad\ P(Y_{n+1}=0|Y_n=2,Y_{n-1}=y_{n-1},\ldots,Y_0=y_0) \\
+&= P(X_{n+1}\in g(0)|X_n=3,X_{n-1}=x_{n-1},\ldots,X_0=x_0) \\
+&= P(X_{n+1}=1|X_n=3,X_{n-1}=x_{n-1},\ldots,X_0=x_0) + P(X_{n+1}=2|X_n=3,X_{n-1}=x_{n-1},\ldots,X_0=x_0) \\
+&= P(X_{n+1}=1|X_n=3) + P(X_{n+1}=2|X_n=3) \\
+&= P(X_{n+1}\in g(0)|X_n=3) \\
+&= P(Y_{n+1}=0|Y_n=2)
+\end{align*}
+
+\item $Y_{n+1}=2$, $Y_n=0$, combined with LOTP:
+\begin{align*}
+&\quad\ P(Y_{n+1}=2|Y_n=0,Y_{n-1}=y_{n-1},\ldots,Y_0=y_0) \\
+&= \sum_{x_n=1,2} P(X_{n+1}=3|X_n=x_n,X_n\in g(0),\ldots,X_0\in g(y_0))P(X_n=x_n|X_n\in g(0),\ldots,X_0\in g(y_0)) \\
+&= \sum_{x_n=1,2} P(X_{n+1}=3|X_n=x_n)P(X_n=x_n|X_n\in g(0),\ldots,X_0\in g(y_0))
+\end{align*}
+Let $\alpha_1=P(X_n=1|X_n\in g(0),\ldots,X_0\in g(y_0)),\alpha_2=P(X_n=2|X_n\in g(0),\ldots,X_0\in g(y_0))$. So we have
+\begin{align*}
+\alpha_1+\alpha_2 &= 1 \\
+P(Y_{n+1}=2|Y_n=0,Y_{n-1}=y_{n-1},\ldots,Y_0=y_0) &= \alpha_1q_{1,3}+\alpha_2q_{2,3}
+\end{align*}
+Since $g(0)$ have $2$ elements, so there exists many combinations to make $\alpha_1,\alpha_2$ take different values, but $\alpha_1+\alpha_2$ always holds. However, to make the Markov property holds, we need to make sure that $\alpha_1q_{1,3}+\alpha_2q_{2,3}=P(Y_{n+1}=2|Y_n=0)$, where $P(Y_{n+1}=2|Y_n=0),q_{2,3}$ are constants. Thus it must have
+$$\alpha_1(q_{1,3}-q_{2,3})=P(Y_{n+1}=2|Y_n=0)-q_{2,3} \Rightarrow q_{1,3}=q_{2,3}$$
+
+\item $Y_{n+1}=0$, $Y_n=0$, combined with LOTP:
+\begin{align*}
+&\quad\ P(Y_{n+1}=0|Y_n=0,Y_{n-1}=y_{n-1},\ldots,Y_0=y_0) \\
+&= \sum_{x_n=1,2} P(X_{n+1}\in g(0)|X_n=x_n,X_n\in g(0),\ldots,X_0\in g(y_0))P(X_n=x_n|X_n\in g(0),\ldots,X_0\in g(y_0)) \\
+&= \sum_{x_n=1,2} P(X_{n+1}\in g(0)|X_n=x_n)P(X_n=x_n|X_n\in g(0),\ldots,X_0\in g(y_0))
+\end{align*}
+Let $\alpha_1'=P(X_n=1|X_n\in g(0),\ldots,X_0\in g(y_0)),\alpha_2'=P(X_n=2|X_n\in g(0),\ldots,X_0\in g(y_0))$. So we have
+\begin{align*}
+\alpha_1'+\alpha_2' &= 1 \\
+P(Y_{n+1}=0|Y_n=0,Y_{n-1}=y_{n-1},\ldots,Y_0=y_0) &= \alpha_1'\left(q_{1,1}+q_{1,2}\right)+\alpha_2'\left(q_{2,1}+q_{2,2}\right)
+\end{align*}
+Similarly to the analysis above, to make the Markov property holds, it has
+$$q_{1,1}+q_{1,2}=q_{2,1}+q_{2,2}$$
+So above all, if $q_{1,3}=q_{2,3}$ and $q_{1,1}+q_{1,2}=q_{2,1}+q_{2,2}$, then $Y_0,Y_1,\ldots$ is Markov. \\
+And example of $Q$ where $Y_0,Y_1,\ldots$ is Markov is:
+$$Q=\begin{pmatrix}
+\frac{1}{3} & \frac{1}{3} & \frac{1}{3} \\
+\frac{1}{3} & \frac{1}{3} & \frac{1}{3} \\
+\frac{1}{3} & \frac{1}{3} & \frac{1}{3}
+\end{pmatrix}$$
+Examplt of $Q$ where $Y_0,Y_1,\ldots$ is not Markov is:
+$$Q=\begin{pmatrix}
+\frac{1}{2} & \frac{1}{2} & 0 \\
+\frac{1}{3} & \frac{1}{3} & \frac{1}{3} \\
+\frac{1}{3} & \frac{1}{3} & \frac{1}{3}
+\end{pmatrix}$$
+
+\end{itemize}
+
+\end{homeworkProblem}
+
+\newpage

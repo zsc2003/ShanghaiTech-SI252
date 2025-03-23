@@ -1,0 +1,79 @@
+\begin{homeworkProblem}
+
+Consider a continuous-time Markov chain $\left\{X_t, 0 \leq t \leq T\right\}$ with a finite discrete state space $\mathcal{X}$. It's transition rate matrix is \textbf{time-varying} and is denoted by $Q_t=$ $\left\{Q_t(x, y), x, y \in \mathcal{X}\right\}$. The state distribution in time $t \in[0, T]$ is denoted by $\pi_t=$ $\left\{\pi_t(x), x \in \mathcal{X}\right\}$. Now we consider the reverse time process of continuous-time Markov chain $\left\{X_t, 0 \leq t \leq T\right\}$, and denote it as $\left\{\overline{X}_t, 0 \leq t \leq T\right\}$. Then we have $\overline{X}_t=X_{T-t}$. Show the following results:
+
+(a) The reverse time process $\left\{\overline{X}_t, 0 \leq t \leq T\right\}$ is a continuous-time Markov chain.
+
+(b) Denote the \textbf{time-varying} transition rate matrix of such reverse time process as $R_t=\left\{R_t(x, y), x, y \in \mathcal{X}\right\}$, then
+$$R_t(x, y)=\frac{\pi_t(y)}{\pi_t(x)} Q_t(y, x)$$
+
+\solution
+
+(a) $\forall t,s\in[0,T]$:
+$$P\left(\overline{X}_{t+s}=j | \overline{X}_s=i, \overline{X}_u=x_u, 0\leq u\leq s\right)=P\left(X_{T-(t+s)}=j | X_{T-s}=i, X_{t-u}=x_u, 0\leq u\leq s\right)$$
+Since $\left\{X_t, 0 \leq t \leq T\right\}$ is a CTMC, which means that given present state $X_{T-s}$, the past state $X_{T-(t+s)}$ and the future state $X_{T-u}$ are conditional independent. Thus we have
+\begin{align*}
+&\quad\ P\left(X_{T-(t+s)}=j | X_{T-s}=i, X_{t-u} =x_u, 0\leq u\leq s\right) \\
+&= P\left(X_{T-(t+s)}=j | X_{T-s}=i\right) \\
+&= P\left(\overline{X}_{t+s}=j | \overline{X}_s=i\right)
+\end{align*}
+Which means that we have proved that $\forall t,s\in[0,T]$:
+$$P\left(\overline{X}_{t+s}=j | \overline{X}_s=i, \overline{X}_u=x_u, 0\leq u\leq s\right)=P\left(\overline{X}_{t+s}=j | \overline{X}_s=i\right)$$
+So the reverse time process $\left\{\overline{X}_t, 0 \leq t \leq T\right\}$ is a CTMC.
+
+(b) Let $p_{s,t}(x,y)=P(X_t=y|X_s=x)$. Then from the definition of conditional probability, we have:
+\begin{align*}
+P(X_t=y, X_s=x) &= P(X_t=y|X_s=x)P(X_s=x) = \pi_s(x)p_{s,t}(x,y) \\
+&= P(X_s=x|X_t=y)P(X_t=y) = \pi_t(y)p_{t,s}(y,x) \\
+\Rightarrow \pi_s(x)p_{s,t}(x,y) &= \pi_t(y)p_{t,s}(y,x)
+\end{align*}
+Similarly with the last problem(Problem 9), we can get that when $\delta\to 0$:
+\begin{align*}
+\pi_{t+\delta}(x) &= \sum_{y}P(X_{t+\delta}=x|X_t=y)\pi_t(y) \\
+&= \sum_{y\neq x}P(X_{t+\delta}=x|X_t=y)\pi_t(y) + P(X_{t+\delta}=x|X_t=x)\pi_t(x) \\
+&\approx  \sum_{y \neq x} \pi_t(y) \cdot Q_t(y, x) \delta + \pi_t(x) \cdot (1 + Q_t(x,x) \delta) \\
+&= \pi_t(x) + \pi_t(x) Q_t(x,x) \delta + \sum_{y \neq x} \pi_t(y) \cdot Q(y, x) \delta
+\end{align*}
+When $\delta\to 0$, all terms containing $\delta$ tend towards 0, therefore:
+\begin{equation}
+\lim_{\delta \to 0} \pi_{t+\delta}(x) = \pi_t(x)
+\label{eq:continuous}
+\end{equation}
+Which means that we can regard $\pi_t(x)$ as continuous in time.
+
+Let $s=t+\delta, \delta\to 0$, then we can get that:
+\begin{align*}
+p_{t,s}(y,x) &= P(X_{t+\delta}=x|X_t=y) \\
+&= \begin{cases}
+Q_t(y,x)\cdot\delta & \text{if } y\neq x \\
+1 + Q_t(y,x)\cdot\delta & \text{if } y=x
+\end{cases} \\
+&= \I_{x=y} + Q_t(y,x)\cdot\delta
+\end{align*}
+As for the reverse proceses, $R_t$ is the transition rate for time $t$ in the reverse process, which represent for the time $T-t$ in the original process. Thus,
+\begin{align*}
+p_{s,t}(x,y) &= P(\overline{X}_{T-t}=y|\overline{X}_{T-(t+\delta)}=x) \\
+&= \begin{cases}
+R_{t+\delta}(x,y)\cdot\delta & \text{if } y\neq x \\
+1 + R_{t+\delta}(x,y)\cdot\delta & \text{if } y=x
+\end{cases} \\
+&= \I_{x=y} + R_{t+\delta}(x,y)\cdot\delta
+\end{align*}
+Which means we have:
+$$\pi_{t+\delta}(x)\left[\I_{x=y} + R_{t+\delta}(x,y)\cdot\delta\right] = \pi_t(y)\left[\I_{x=y} + Q_t(y,x)\cdot\delta\right]$$
+And from equation $\ref{eq:continuous}$, we know that $\pi_t(x)$ is continuous in time, also the transition rate matrix should be continuous in time, which means that as $\delta\to 0$:
+\begin{align*}
+\pi_{t+\delta}(x) &= \pi_t(x) \\
+R_{t+\delta}(x,y) &= R_t(x,y) \\
+\Rightarrow \pi_{t}(x)\left[\I_{x=y} + R_{t}(x,y)\cdot\delta\right] &= \pi_t(y)\left[\I_{x=y} + Q_t(y,x)\cdot\delta\right]
+\end{align*}
+$$\Rightarrow \begin{cases}
+R_t(x,y) = Q_t(y,x) & \text{if } x=y \\
+\pi_t(x)R_t(x,y) = \pi_t(y)Q_t(y,x) & \text{if } x\neq y
+\end{cases}$$
+Thus merge all the cases, we can get that
+$$R_t(x, y)=\frac{\pi_t(y)}{\pi_t(x)} Q_t(y, x)$$
+
+\end{homeworkProblem}
+
+\newpage

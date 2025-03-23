@@ -10,7 +10,9 @@
 \solution
 
 \textbf{To ensure the total system is stable, the arrival rate should be less than the  service rate, i.e.} $$\lambda < \mu$$
+Intuitive understanding is that if the survice rate is less than the arrival rate, which means that the average survice time is less than the average arrival interval, then the system will continously queueing.
 
+\textcolor{blue}{The numertical results for the systems' average delay:} \\
 1. M/M/1: the number of customers in the system could be modeled as the following CTMC:
 \begin{center}
 \begin{tikzpicture}[->, >=stealth, auto, thick, node distance=2cm]
@@ -136,6 +138,34 @@ $$\pi_0 = \left[\left(\sum_{i=0}^{k-1}\dfrac{1}{i!}\left(\dfrac{\lambda}{\mu}\ri
 Since the surver's service rate is $\mu$, i.e. the survice time is $\Expo(\mu)$, so the average time customers spend in the surver is $\dfrac{1}{\mu}$, so the average delay $W$ is
 $$W=W_q+\dfrac{1}{\mu}= \left(\dfrac{\lambda}{\mu}\right)^k\dfrac{\pi_0}{(k!)(k\mu)(1-\frac{\lambda}{k\mu})^2}+\dfrac{1}{\mu}$$
 
+\textcolor{blue}{The performance comparison of the systems:} \\
+Define $\rho=\dfrac{\lambda}{\mu}$. As mentioned in the beginning, we have $\lambda<\mu\Rightarrow \rho\in(0,1)$. \\
+1. Prove $W_{\text{M/M/1}} \leq W_{\text{M/M/k}}$, the following steps are what we need to prove:
+\begin{align*}
+\dfrac{1}{k\mu-\lambda} &\leq \dfrac{1}{\mu} + \rho^k\dfrac{1}{(k!)(k\mu)\left(1-\frac{\rho}{k}\right)^2}\dfrac{1}{\pi_0} \\
+\dfrac{\lambda-(k-1)\mu}{(k\mu-\lambda)\mu}\cdot\pi_0 &\leq \dfrac{\rho^k}{(k!)(k\mu)\left(1-\frac{\rho}{k}\right)^2} \\
+\left(\sum_{i=0}^{k-1}\dfrac{\rho^i}{i!}\right)+\dfrac{1}{k!}\dfrac{\rho^k}{1-\frac{\rho}{k}} &\leq \dfrac{\rho^k\cdot (k\mu-\lambda)}{k(k!)\left(1-\frac{\rho}{k}\right)^2\left[\lambda-(k-1)\mu\right]} \\
+\sum_{i=0}^{k-1}\dfrac{\rho^i}{i!} &\leq \dfrac{\rho^k\cdot \left[k^2\mu+(2k-\rho)\lambda\right]}{k(k!)\left(1-\frac{\rho}{k}\right)^2\left[\lambda-(k-1)\mu\right]}
+\end{align*}
+When $k=1$, the inequality obviously holds, and the equality holds. \\
+Use the deduction, suppose the inequality holds $\forall n=1,2,\ldots,k$, i.e.
+$$\sum_{i=0}^{n-1}\dfrac{\rho^i}{i!} \leq \dfrac{\rho^n\cdot \left[n^2\mu+(2n-\rho)\lambda\right]}{n(n!)\left(1-\frac{\rho}{n}\right)^2\left[\lambda-(n-1)\mu\right]}$$
+then for $n=k+1$, we only need to prove that
+\begin{align*}
+\dfrac{\rho^n}{n!} &\leq \dfrac{\rho^{n+1}\cdot \left[(n+1)^2\mu+(2(n+1)-\rho)\lambda\right]}{(n+1)((n+1)!)\left(1-\frac{\rho}{n+1}\right)^2\left[\lambda-((n+1)-1)\mu\right]} - \dfrac{\rho^n\cdot \left[n^2\mu+(2n-\rho)\lambda\right]}{n(n!)\left(1-\frac{\rho}{n}\right)^2\left[\lambda-(n-1)\mu\right]} \\
+1 &\leq \dfrac{\rho\cdot \left[(n+1)^2\mu+(2(n+1)-\rho)\lambda\right]}{(n+1)^2\left(1-\frac{\rho}{n+1}\right)^2\left[\lambda-n\mu\right]} - \dfrac{n^2\mu+(2n-\rho)\lambda}{n\left(1-\frac{\rho}{n}\right)^2\left[\lambda-(n-1)\mu\right]}
+\end{align*}
+Since $\rho\in(0,1)$, so the above inequality holds, thus
+$$W_{\text{M/M/1}} \leq W_{\text{M/M/k}}$$
+
+2. Prove $W_{\text{M/M/k}} \leq W_{\text{FDM}}$, we have a similar steps:
+\begin{align*}
+\dfrac{1}{\mu} + \rho^k\dfrac{1}{(k!)(k\mu)\left(1-\frac{\rho}{k}\right)^2}\dfrac{1}{\pi_0} &\leq \dfrac{1}{\mu-\frac{\lambda}{k}} \\
+\sum_{i=0}^{k-1}\dfrac{\rho^i}{i!} &\leq \dfrac{\rho^k\cdot \left[k^2\mu+(2k-\rho)\lambda\right]}{(k!)\left(1-\frac{\rho}{k}\right)^2\left[\lambda-(k-1)\mu\right]}
+\end{align*}
+It has a similar process, instread that a $k$ is times to the right hand side, thus
+$$W_{\text{M/M/k}} \leq W_{\text{FDM}}$$
+
 \textcolor{blue}{So above all, the average delay of the three systems are}
 \begin{align*}
 W_{\text{FDM}} &= \dfrac{1}{\mu-\frac{\lambda}{k}} \\
@@ -144,8 +174,8 @@ W_{\text{M/M/k}} &= \dfrac{1}{\mu} + \left(\dfrac{\lambda}{\mu}\right)^k\dfrac{1
 \end{align*}
 
 And the performance of average delay of the three systems are
-$$W_{\text{FDM}} < W_{\text{M/M/k}} < W_{\text{M/M/1}}$$
-
+$$W_{\text{M/M/1}} \leq W_{\text{M/M/k}} \leq W_{\text{FDM}}$$
+If and only if when $k=1$, the equality holds.
 
 \textcolor{blue}{Pros and cons:}
 \begin{itemize}
@@ -164,7 +194,6 @@ Cons: Its scheduling efficiency is not as high as that of a centralized system, 
 
 Therefore, as long as the system remains stable and the load is moderate, the M/M/1 system is the optimal choice in terms of average latency.
 
-
 \textcolor{blue}{Simulation results:} \\
 The simulation has total $1000000$ customers, with different arrival rate and service rate, and $k$. The details could be seen in hw2\_code.ipynb, theoretical results are also in it, which could be found that the simulated results are quite close to the theoretical results. And $W_q$ represent the avreage waiting time, $W_s$ represent the avreage service time, $W=W_q+W_s$ is the average delay. \\
 The simulation with different settings are as followed.
@@ -177,7 +206,7 @@ The simulation with different settings are as followed.
     Settings: the arrival rate $\lambda = 0.1$, service rate $\mu = 0.2$, and $k=3$.
     \includegraphics[width=\textwidth]{./figure/scenario3.png}
 \end{figure}
-\vspace{0.5in}
+\vspace{1.0in}
 \begin{figure}[h]
     \centering
     Settings: the arrival rate $\lambda = 0.1$, service rate $\mu = 0.2$, and $k=10$.

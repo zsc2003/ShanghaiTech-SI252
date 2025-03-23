@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2024.3.6)  23 MAR 2025 02:54
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2024.3.6)  23 MAR 2025 22:33
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -509,11 +509,11 @@ Underfull \hbox (badness 10000) in paragraph at lines 10--11
  []
 
 [13]
-Overfull \hbox (15.8889pt too wide) in paragraph at lines 101--102
+Overfull \hbox (15.8889pt too wide) in paragraph at lines 103--104
  [] 
  []
 
-[14]
+[14] [15] [16]
 File: ./figure/scenario1.png Graphic file (type bmp)
 <./figure/scenario1.png>
 File: ./figure/scenario2.png Graphic file (type bmp)
@@ -526,17 +526,17 @@ File: ./figure/scenario5.png Graphic file (type bmp)
 <./figure/scenario5.png>
 File: ./figure/scenario6.png Graphic file (type bmp)
 <./figure/scenario6.png>
- [15] [16] [17]) (./problem/p9.tex
+ [17] [18]) (./problem/p9.tex
 Underfull \hbox (badness 10000) in paragraph at lines 18--19
 
  []
 
-[18] [19]) (./problem/p10.tex
+[19] [20]) (./problem/p10.tex
 Underfull \hbox (badness 10000) in paragraph at lines 10--11
 
  []
 
-[20] [21]) (./hw2.aux) ) 
+[21] [22]) (./hw2.aux) ) 
 Here is how much of TeX's memory you used:
  14836 strings out of 476683
  314171 string characters out of 5807576
@@ -546,4 +546,4 @@ Here is how much of TeX's memory you used:
  1348 hyphenation exceptions out of 8191
  100i,16n,104p,669b,963s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on hw2.pdf (21 pages).
+Output written on hw2.pdf (22 pages).

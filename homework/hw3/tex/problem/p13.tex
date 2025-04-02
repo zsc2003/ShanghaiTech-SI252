@@ -1,0 +1,31 @@
+\begin{homeworkProblem}
+
+Illustrate the relationship between sampling and optimization.
+
+\solution
+
+1. Convert optimization problem to sampling problem. \\
+An optimization problem is usually formulated as
+\begin{align*}
+\max_{x}  &\quad f(x) \\
+\text{s.t.} &\quad f_i(x) \leq 0
+\end{align*}
+The constrained optimization problem is not suitable for sampling in MCMC. So we can consider applying the penalty to the objective function:
+$$\tilde{f}(x) = f(x) + \lambda \cdot f_i(x)\cdot\I_{f_i(x) > 0}$$
+where $\lambda > 0$ and $f_i(x)\cdot\I_{f_i(x) > 0}$ measures constraint violations. \\
+To get the optimal value, we can apply the Metropolis random walk. For each step, translate from the current state $x$ to a new state $x'$ by
+$$x' = x + \epsilon, \quad \epsilon \sim \mathcal{N}(0, \sigma^2 I)$$
+with acceptance rate
+$$a_{x,x'} = \min\left(1, e^{\beta\left(\tilde{f}(x')-\tilde{f}(x)\right)} \right)$$
+$\beta$ could be selected similarly to the Simulated Annealing method. Then the sampled distribution with maximum $\tilde{f}(x)$ could be approximated regarded as the optimal solution.
+
+2. Convert sampling problem to optimization problem. \\
+Suppose that we have a target distribution $\pi$, which is difficult to sample. We could try to use $q_{\theta}$ to approximate it, where $\theta$ is the parameters. Thus, we can minimize the KL-divergence $KL(q_{\theta}||\pi)$ to let the estimated distribution converge to the target distribution, and then sample from $q_{\theta}$, which is easier to sample. Thus the sampling problem could be converted to the optimization problem.
+
+Usually, the optimization problem use the Variational Inference to approximate the target distribution. i.e. get the evidence lower bound (ELBO) of the KL-divergence, make the optimization problem easier.
+
+Reference: \href{https://zhuanlan.zhihu.com/p/88336614}{https://zhuanlan.zhihu.com/p/88336614}
+
+\end{homeworkProblem}
+
+\newpage

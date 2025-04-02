@@ -1,0 +1,75 @@
+\begin{homeworkProblem}
+
+\textbf{Knapsack Problem:} $m=50, w=100$, each $g_j$ is sampled from the discrete uniform distribution over the supporting set $\{3,4,5,6,7\}$, each $w_j$ is chosen random from the discrete uniform distribution over the supporting set $\{2,4,6,8\}$.
+
+(a) Find the maximization of the total worth of the treasure by using DP method
+
+(b) Find the maximization of the total worth of the treasure by using Metropolis-Hastings(MH) algorithm
+
+(c) Discuss the choice of $\beta$ \& function of $V_1(x)$ in MCMC, verify your argument with numerical experiments
+
+(d) Discuss the pros and cons of both $\mathrm{MCMC}(\mathrm{MH})$ and DP methods
+
+\solution
+
+(a) The i-th item weights $w_i$, and worths $g_i$. Define $f_{i,j}$ represent the maximum worth of the treasure that can be obtained by using the first $i$ items and the knapsack capacity is $j$. Then we can get the Bellman equation:
+$$f_{i,j}=\max\left\{f_{i-1,j},f_{i-1,j-w_i}+g_i\right | j\geq w_i\}$$
+where the boarder conditions are $f_{0,j}=0, \forall j\in\mathbb{Z}$. And the optimal solution is $f_{m,w}$. \\
+We can fix the sample seed, the random seed is set to be np.random.seed(0), and the optimal solution is 150.
+
+(b) Let the state $x=(x_1,\ldots,x_m)$ be the 01 binary sequence, representing whether each item is selected or not. And the transition is a random flip. If the new state $y$ is a valid state, i.e.
+$$\sum\limits_{i=1}^m y_iw_i\leq w$$
+then it has equal probability to transition to all states, which means that
+$$p_{x,y}=p_{y,x}=\dfrac{1}{m}$$
+Otherwise, it will stay at the same state. It is obvious that the Markov Chain is reducible as all states can transition to the state $(0,\ldots,0)$ in $m$ steps.
+
+To generate a distribution that have a bigger probability at the states with higher values, the distribution can set to be
+$$\pi_x\propto e^{\beta V_1(x)}$$
+Where
+$$V_1(x) = \sum_{i=1}^m x_ig_i$$
+is the value of state $x$, and $\beta$ is a positive constant for adjusting the distribution. \\
+So above all, we have constructed a reducible proposal Markov Chain, and a disired distribution $s(x)$. And we can calculate the acceptance rate of the transition is
+\begin{align*}
+a_{x,y} &= \min\left(\dfrac{\pi_yp_{y,x}}{\pi_xp_{x,y}},1\right) \\
+&= \min\left(\dfrac{e^{\beta V_1(y)}\cdot \frac{1}{m}}{e^{\beta V_1(x)}\cdot \frac{1}{m}},1\right) \\
+&=\min\left(e^{\beta\left[V_1(y)-V_1(x)\right]},1\right)
+\end{align*}
+So we can apply Metropolis-Hastings algorithm to generate the samples. The state with the maximum probability representing the optimal solution is the state with the maximum value of $V_1(x)$.
+
+(c) From the analysis above, we can setting $\beta = 0.01, 0.1, 1, 10, 100$ respectively. Additionally, the $\beta$ is set to be a function of $t$: $\beta(t)=C\cdot \log(t+1)$. Where $C=\dfrac{1}{\log\left(\frac{T}{2}\right)}$ to ensure the in middle time, $\beta=1$. \\
+We can also setting a new value function $V_2(x)=\dfrac{\sum_{i=1}^m x_ig_i}{\sum_{i=1}^m x_iw_i}$, which represent to the cost-effectiveness. The simulations results for different $\beta$ and value functions are as follows: \\
+
+\begin{table}[h]
+    \centering
+    \label{tab:value_function}
+    \begin{tabular}{l c c c c c c}
+    \toprule
+    & $\beta=0.01$ & $\beta=0.1$ & $\beta=1$ & $\beta=10$ & $\beta=100$ & $\beta=\log(t+1)$ \\
+    \midrule
+    $V_1^*(x)$ & 98 & 81 & 142 & 103 & 102 & \textbf{144} \\
+    $V_2^*(x)$ & 99 & 110 & 109 & 7 & 7 & 91 \\
+    \bottomrule
+\end{tabular}
+\end{table}
+
+We can see that $V_1$ value function has better performance.
+
+As $\beta\gg 1$: Suppose that $x$ is the strictly local optimal state, and $y$ are the states that $x$ can transition to. Thus it must have $V_1(y)<V_1(x)$, thus the acceptance rate from $x$ to $y$ is $\lim\limits_{\beta\to+\infty}e^{\beta\left[V_1(y)-V_1(x)\right]}=0$. Thus it would stay in the local optimal state, it lacks of exploration, only exploration.
+
+If $\beta\ll 1$: Then $\lim\limits_{\beta\to 0^+}e^{\beta\left[V_1(y)-V_1(x)\right]}=1$, so it would always explore, and it lacks of exploitation.
+
+
+And $\beta(t)=C\cdot \log(1+t)$ make the exploration-exploitation trade-off better, it explore more at the beginning, and exploite more later. So it has a better performance.
+
+(d) 1. Metropolis-Hastings / MCMC Methods \\
+Advantages:
+Suitable for large-scale and high-dimensional problems, when the state space is enormous, it can find high-value solutions through random walks. Hyperparameters (such as $\beta$) can be flexibly adjusted to balance exploration and exploitation, which helps in escaping local optima. It can accommodate complex objective functions; the design is quite flexible as long as the acceptance rate is properly constructed. \\
+Disadvantages: The result is an approximate solution, it requires sufficiently long sampling and an appropriate burn-in period to approach the optimal solution, and the convergence speed and sample autocorrelation may be suboptimal. Selecting the hyperparameters (such as $\beta$) is challenging and may require extensive experimentations.
+
+2. Dynamic ProgrammingMethod \\
+Advantages: It can generate the optimal solution, which means the quality of the solution does not rely on randomness. The dynamec programming method is often efficient and straightforward to implement. \\
+Disadvantages: The time and space complexity of the DP method depends on the knapsack capacity, which is a NP-complete problem, could not be solved in polynomial time. DP algorithms are typically applicable only to structured problems; for unstructured or approximate optimization problems, it is difficult to apply them directly.
+
+\end{homeworkProblem}
+
+\newpage

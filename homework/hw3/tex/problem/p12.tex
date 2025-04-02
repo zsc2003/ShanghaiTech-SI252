@@ -1,0 +1,37 @@
+\begin{homeworkProblem}
+
+How to solve a general combinatorial optimization probkem with MCMC method?
+
+\solution
+
+To solve a combinatorial optimization problem with a global maximum using an MCMC method, we convert the optimization problem into a sampling problem by defining a target probability distribution.
+
+\begin{itemize}
+\item Constructing the target distribution: \\
+The combinatorial optimization problem is usually formulated as
+$$\max_{x\in\mathcal{C}}  V(x)\Rightarrow \max_{x,\pi(x)} \pi(x)V(x) \text{ ,where } \pi(x) = \begin{cases}
+1 & \text{if } x \in \mathcal{C
+} \\
+0 & \text{otherwise}
+\end{cases}$$
+But the constrain is a Dirac delta function, which is not suitable for sampling in MCMC. So we can consider applying the entropy regularization as a penalty to the objective function:
+$$\max_{\pi(x)} \pi(x)V(x) - \dfrac{1}{\beta}\sum_{x\in\mathcal{C}}\pi(x)\log\pi(x)$$
+IT could be solve that the optimal value, aka the target distribution is:
+$$\pi(x) = \dfrac{e^{\beta V(x)}}{\sum\limits_{y}e^{\beta V(y)}} \propto e^{\beta\,V(x)}$$
+Where $\beta$ is an inverse temperature parameter. The simulated annealing usually set it to be $\beta=\dfrac{1}{T}$, where the temperature $T=\dfrac{C}{\log(t+1)}$, $t$ is the iteration number. In this formulation, solutions with higher $V(x)$ receive exponentially higher probability.
+
+\item MCMC Sampling Process
+\begin{enumerate}
+\item State Space: Define the set of all possible solutions $x$ in the feasible region. (e.g., binary vectors, permutations).
+\item Proposal new state: Generate a new state $y$ from the current state $x$.(e.g. randomly flipping bits or swapping elements).
+\item Acceptance rate: For current state $x$ and new state $y$, under the current $\beta$, compute the acceptance rate:
+$$a(x,y) = \min\left(1,\, e^{\beta\,(V(y)-V(x))}\right)$$
+\item Update: Flip a coin with probability $a(x,y)$, transition to the new state $y$ if heads; otherwise, retain $x$.
+\end{enumerate}
+\end{itemize}
+
+Thus, using an MCMC algorithm to sample from this distribution while dynamically lowering $\beta$ over time. In the early stage, a low $\beta$ (high temperature) drives the system to greedily search for high-$V(x)$ regions; later, it increases $\beta$ (low down the temperature). This approach increases the chance of finding the global optimum or a near-optimal solution. After a sufficient number of iterations, select the solution with the highest $V(x)$ as an approximation of the global optimum.
+
+\end{homeworkProblem}
+
+\newpage

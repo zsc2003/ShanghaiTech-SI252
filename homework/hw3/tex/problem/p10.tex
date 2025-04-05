@@ -21,7 +21,7 @@ g(x) &= \dfrac{1}{\pi\sqrt{5}(1+\frac{1}{5}x^2)} \\
 G(x) &= \dfrac{1}{\pi\sqrt{5}}\int_{-\infty}^{x}\dfrac{1}{1+\frac{1}{5}y^2}\dx=\dfrac{1}{\pi}\arctan\left(\dfrac{x}{\sqrt{5}}\right)
 \end{align*}
 Since $G(x)$ is strictly increasing, by calculating its the inverse function, and sample $U\sim\Unif(0,1)$, we can get the samples $Y$ by:
-$$G^{-1}(y) = \sqrt{5}\tan(\pi y), y\in[-0.5,0.5] \Rightarrow XY = \sqrt{5}\tan(\pi (U-0.5))$$
+$$G^{-1}(y) = \sqrt{5}\tan(\pi y), y\in[-0.5,0.5] \Rightarrow Y = \sqrt{5}\tan(\pi (U-0.5))$$
 
 (a) Take the deformation of Cauchy distribution as the proposal distribution, i.e. the one step transition PDF is
 $$f_{x,y} = \dfrac{1}{\pi\sqrt{5}(1+\frac{1}{5}y^2)}$$

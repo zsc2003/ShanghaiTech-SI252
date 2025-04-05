@@ -24,19 +24,19 @@ To sample on $X\sim \N(0,1)$, since $Y=|X|$, so we can generate $U\sim\Unif(0,1)
 Thus the $\N(0,1)$ is sampled with Metropolis-Hastings algorithm in 1000000 samples, and the burn in is set to be 10000 samples. The result is as follows:
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.5\textwidth]{./figure/p4/MH.png}
+    \includegraphics[width=0.4\textwidth]{./figure/p4/MH.png}
 \end{figure}
 
 (b) Since $\pi_x$ is a the stationary distribution $\N(0,1)$, and we can ignore the constant form, so the potential energy is
 $$U(x)=-\log(\pi_x)=\dfrac{1}{2}x^2 + \dfrac{1}{2}\log(2\pi) \stackrel{\text{ignore const}}{\Rightarrow} U(x)=\dfrac{1}{2}x^2$$
-And let the mass be 1, then the Kinetic energy is
-$$V(\omega)=\dfrac{1}{2}\omega^2, \quad\text{where } \omega\sim\N(0,1)$$
+And let the mass be 1. There exists a problem that we need to sample is $\N(0,1)$, so we cannot $\N(0,1)$ as the distribution for Kinetic energy. So we can set the Kinetic energy to be a Student's t-distribution with parameter $\nu=1$, thus then the Kinetic energy is
+$$V(\omega)\stackrel{\text{ignore constant}}{=}\dfrac{\nu+1}{2}\log\left(1+\dfrac{\omega^2}{\nu}\right) \qquad\text{where } \omega\sim\text{Student-t}(\nu=1)$$
 Thus the Hamiltonian energy is
-$$H(x,\omega)=U(x)+V(\omega)=\dfrac{1}{2}x^2+\dfrac{1}{2}\omega^2$$
+$$H(x,\omega)=U(x)+V(\omega)=\dfrac{1}{2}x^2+\dfrac{\nu+1}{2}\log\left(1+\dfrac{\omega^2}{\nu}\right)$$
 Initially, set $x_0=0, \omega_0\sim\N(0,1)$, apply the Leapfrog method to sample:
 \begin{align*}
 \omega_{t+\frac{\delta}{2}} &= \omega_t - \frac{\delta}{2}\cdot \dfrac{\dU(x_t)}{\dx_t} = \omega_t - \frac{\delta}{2}\cdot x_t \\
-x_{t+\delta} &= x_t + \delta \cdot \dfrac{\dV(\omega_{t+\frac{\delta}{2}})}{\domega_{t+\frac{\delta}{2}}} = x_t + \delta\cdot \omega_{t+\frac{\delta}{2}} \\
+x_{t+\delta} &= x_t + \delta \cdot \dfrac{\dV(\omega_{t+\frac{\delta}{2}})}{\domega_{t+\frac{\delta}{2}}} = x_t + \delta\cdot \dfrac{\nu + 1}{\nu} * \dfrac{\omega_{t+\frac{\delta}{2}}}{1 + \frac{\omega_{t+\frac{\delta}{2}}^2}{\nu}} \\
 \omega_{t+\delta} &= \omega_{t+\frac{\delta}{2}} - \frac{\delta}{2}\cdot \dfrac{\dU(x_{t+\delta})}{\dx_{t+\delta}} = \omega_{t+\frac{\delta}{2}} - \frac{\delta}{2}\cdot x_{t+\delta}
 \end{align*}
 After Leapfrog $L$ steps, we can get the state $(x_L, \omega_L)$. And set $(x_L, -\omega_L)$ to be the proposal distribution. And the accept rate for the Hamiltonian Monte Carlo algorithm is
@@ -52,7 +52,7 @@ We step the stepsize to be $\delta=0.3, L=15$, and the sample trajectory of one 
 $$F_T(t) = 1 - e^{-t}, \forall t > 0$$
 So the inverse funciton of its CDF is $ F^{-1}_T(x) = -\ln(1-x)$. So let $U_2\sim \Unif(0,1)$, then
 $$T = F^{-1}(U_2)=-\ln(1-U_2)$$
-Let $X=\sqrt{2T}\cos(U), Y=\sqrt{2T}\sin(U)$, from Box-Muller method, we can get that $X,Y$ are i.i.d. $N(0,1)$. The sampled results are as follows:
+Let $X=\sqrt{2T}\cos(U), Y=\sqrt{2T}\sin(U)$, from Box-Muller method, we can get that $X,Y$ are i.i.d. $\N(0,1)$. The sampled results are as follows:
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.8\textwidth]{./figure/p4/box_muller.png}

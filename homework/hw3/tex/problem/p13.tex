@@ -17,12 +17,12 @@ To get the optimal value, we can apply the Metropolis random walk. For each step
 $$x' = x + \epsilon, \quad \epsilon \sim \mathcal{N}(0, \sigma^2 I)$$
 with acceptance rate
 $$a_{x,x'} = \min\left(1, e^{\beta\left(\tilde{f}(x')-\tilde{f}(x)\right)} \right)$$
-$\beta$ could be selected similarly to the Simulated Annealing method. Then the sampled distribution with maximum $\tilde{f}(x)$ could be approximated regarded as the optimal solution.
+$\beta$ could be selected similarly to the Simulated Annealing method. Then the sampled distribution with maximum $\tilde{f}(x)$ could be approximated regarded as the optimal solution. \\
 
 2. Convert sampling problem to optimization problem. \\
 Suppose that we have a target distribution $\pi$, which is difficult to sample. We could try to use $q_{\theta}$ to approximate it, where $\theta$ is the parameters. Thus, we can minimize the KL-divergence $KL(q_{\theta}||\pi)$ to let the estimated distribution converge to the target distribution, and then sample from $q_{\theta}$, which is easier to sample. Thus the sampling problem could be converted to the optimization problem.
 
-Usually, the optimization problem use the Variational Inference to approximate the target distribution. i.e. get the evidence lower bound (ELBO) of the KL-divergence, make the optimization problem easier.
+Usually, the optimization problem use the Variational Inference to approximate the target distribution. i.e. get the evidence lower bound (ELBO) of the KL-divergence, make the optimization problem easier. \\
 
 Reference: \href{https://zhuanlan.zhihu.com/p/88336614}{https://zhuanlan.zhihu.com/p/88336614}
 

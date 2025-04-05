@@ -25,8 +25,8 @@ Where $\beta$ is an inverse temperature parameter. The simulated annealing usual
 \item State Space: Define the set of all possible solutions $x$ in the feasible region. (e.g., binary vectors, permutations).
 \item Proposal new state: Generate a new state $y$ from the current state $x$.(e.g. randomly flipping bits or swapping elements).
 \item Acceptance rate: For current state $x$ and new state $y$, under the current $\beta$, compute the acceptance rate:
-$$a(x,y) = \min\left(1,\, e^{\beta\,(V(y)-V(x))}\right)$$
-\item Update: Flip a coin with probability $a(x,y)$, transition to the new state $y$ if heads; otherwise, retain $x$.
+$$a_{x,y} = \min\left(1,\, e^{\beta\,(V(y)-V(x))}\right)$$
+\item Update: Flip a coin with probability $a_{x,y}$, transition to the new state $y$ if heads; otherwise, retain $x$.
 \end{enumerate}
 \end{itemize}
 

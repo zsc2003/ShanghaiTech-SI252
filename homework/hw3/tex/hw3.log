@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2024.3.6)  1 APR 2025 22:15
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2024.3.6)  5 APR 2025 22:48
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -693,7 +693,17 @@ File: ./figure/p11/Hamiltonian.png Graphic file (type bmp)
  [25]
 File: ./figure/p11/accept_reject.png Graphic file (type bmp)
 <./figure/p11/accept_reject.png>
- [26]) (./problem/p12.tex [27]) (./problem/p13.tex [28]) (./problem/p14.tex
+ [26]) (./problem/p12.tex [27]) (./problem/p13.tex
+Underfull \hbox (badness 10000) in paragraph at lines 19--21
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--26
+
+ []
+
+[28]) (./problem/p14.tex
 File: ./figure/p14/graph.png Graphic file (type bmp)
 <./figure/p14/graph.png>
  [29] [30]) (./hw3.aux)

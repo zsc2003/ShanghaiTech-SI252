@@ -34,9 +34,9 @@ Thus the Hamiltonian energy is
 $$H(x,\omega)=U(x)+V(\omega)= -\log\left(2e^{-\frac{1}{2}(x-2)^2} + 3e^{-\frac{1}{2}(x+2)^2}\right)+\dfrac{1}{2}\omega^2$$
 Initially, set $x_0=0, \omega_0\sim\N(0,1)$, apply the Leapfrog method to sample:
 \begin{align*}
-\omega_{t+\frac{\delta}{2}} &= \omega_t - \frac{\delta}{2}\cdot \dfrac{\dU(x_t)}{\dx_t} = \omega_t - \frac{\delta}{2}\cdot \dfrac{2(x_t-2)e^{-\frac{1}{2}(x_t-2)^2+3(x_t+2)e^{-\frac{1}{2}(x_t+2)^2}}}{2e^{-\frac{1}{2}(x_t-2)^2+3e^{-\frac{1}{2}(x_t+2)^2}}} \\
+\omega_{t+\frac{\delta}{2}} &= \omega_t - \frac{\delta}{2}\cdot \dfrac{\dU(x_t)}{\dx_t} = \omega_t - \frac{\delta}{2}\cdot \dfrac{2(x_t-2)e^{-\frac{1}{2}(x_t-2)^2}+3(x_t+2)e^{-\frac{1}{2}(x_t+2)^2}}{2e^{-\frac{1}{2}(x_t-2)^2}+3e^{-\frac{1}{2}(x_t+2)^2}} \\
 x_{t+\delta} &= x_t + \delta \cdot \dfrac{\dV(\omega_{t+\frac{\delta}{2}})}{\domega_{t+\frac{\delta}{2}}} = x_t + \delta\cdot \omega_{t+\frac{\delta}{2}} \\
-\omega_{t+\delta} &= \omega_{t+\frac{\delta}{2}} - \frac{\delta}{2}\cdot \dfrac{\dU(x_{t+\delta})}{\dx_{t+\delta}} = \omega_{t+\frac{\delta}{2}} - \frac{\delta}{2}\cdot \dfrac{2(x_{t+\delta}-2)e^{-\frac{1}{2}(x_{t+\delta}-2)^2+3(x_{t+\delta}+2)e^{-\frac{1}{2}(x_{t+\delta}+2)^2}}}{2e^{-\frac{1}{2}(x_{t+\delta}-2)^2+3e^{-\frac{1}{2}(x_{t+\delta}+2)^2}}}
+\omega_{t+\delta} &= \omega_{t+\frac{\delta}{2}} - \frac{\delta}{2}\cdot \dfrac{\dU(x_{t+\delta})}{\dx_{t+\delta}} = \omega_{t+\frac{\delta}{2}} - \frac{\delta}{2}\cdot \dfrac{2(x_{t+\delta}-2)e^{-\frac{1}{2}(x_{t+\delta}-2)^2}+3(x_{t+\delta}+2)e^{-\frac{1}{2}(x_{t+\delta}+2)^2}}{2e^{-\frac{1}{2}(x_{t+\delta}-2)^2}+3e^{-\frac{1}{2}(x_{t+\delta}+2)^2}}
 \end{align*}
 After Leapfrog $L$ steps, we can get the state $(x_L, \omega_L)$. And set $(x_L, -\omega_L)$ to be the proposal distribution. And the accept rate for the Hamiltonian Monte Carlo algorithm is
 $$a_{(x_0,\omega_0),(x_L,-\omega_L)}=\min\left(\dfrac{\exp\left(-H(x_L,-\omega_L)\right)}{\exp\left(-H(x_0,\omega_0)\right)}, 1\right)=\min\left(\dfrac{\exp\left(-U(x_L)-V(-\omega_L)\right)}{\exp\left(-U(x_0)-V(\omega_0)\right)}, 1\right)$$

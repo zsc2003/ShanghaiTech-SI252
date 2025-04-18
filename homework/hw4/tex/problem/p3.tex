@@ -1,0 +1,144 @@
+\section{Part III: Design for Modern Bandit Algorithms }
+(1) design a UCB style algorithm for graph bandits in the format of pseudocode, and explain how you utilize the additional structure information.
+
+(2) design a UCB style algorithm for dueling bandits in the format of pseudocode, and explain how you utilize the additional structure information.
+
+(3) design a UCB style algorithm for combinatorial bandits in the format of pseudocode, and explain how you utilize the additional structure information.
+
+(4) design a UCB style algorithm for neural bandits in the format of pseudocode, and explain how you utilize the additional structure information.
+
+\solution
+
+(1) Graph bandit is a special case of multi-armed bandit problem, where the reward between arms has the correlation, which could be represented as a graph structure. \\
+Base on the assumption that the graph's structure is known, i.e. the degree matrix $D$ and adjacency matrix $A$ are known, thus the Laplacian matrix $L = D - A$ is also known, and it is a positive semi-definite matrix, which could be diagonalized as $L = Q \Lambda Q^\top$. Thus each node has a spectral embedding $x_v$ in the space of $Q$, which is the corresponding eigenvector of the Laplacian matrix. The eigenvalues for $\Lambda$ is defined as $0<\lambda = \lambda_1\leq \lambda_2\leq\cdots\leq\lambda_N$. \\
+The reward function is set to be a linear combination of the eigenvectors. For a set of weights $\alpha$, the reward is defined as
+$$f_{\alpha}(v)=\sum_{k=1}^N\alpha_k(q_k)_v=x_v^{\top}\alpha$$
+It is as constructed that for each time $t$, after selecting the node $v$, the recieved reward $r_t$ is affected by a noise $\epsilon_t$, i,e,
+$$r_t = x_v^{\top}\alpha^* + \epsilon_t$$
+Where the noise has a upper bound $R$. \\
+Thus, for each time, we the following UCB algorithm for graph bandit to select $v_t$, which represents to the $x_{v_t}$-th row of $Q$.
+
+Reference: \href{https://inria.hal.science/hal-01045036/document}{\textit{Spectral Bandits for Smooth Graph Functions with
+Applications in Recommender Systems}}.
+
+The pseudocode of the UCB algorithm for graph bandits is as follows:
+\begin{algorithm}[h]
+    \caption{UCB Algorithm for graph bandits}
+    \textbf{Input:} Number of vertices $N$, total rounds $T$. Spectral basis $\{ \Lambda_L, Q \}$ of graph Laplacian $L$. Cconfidence parameters $\delta$. Upper bounds: $R$ (noise), $C$ (norm of true parameter vector)
+    \begin{algorithmic}[1]
+    \State $\Lambda \gets \Lambda_{L} + \lambda I$
+    \State $d \gets \max\{ d : (d-1)\lambda_d \leq T / \log(1 + T/\lambda) \}$ \Comment{Select effective dimension}
+    \For{$t = 1$ \textbf{to} $T$}
+        \State $X_t \gets [x_1^\top, x_2^\top, \dots, x_{t-1}^\top]^\top$ \Comment{Past feature vectors}
+        \State $r \gets [r_1, r_2, \dots, r_{t-1}]^\top$ \Comment{Past observed rewards}
+        \State $V_t \gets X_t^\top X_t + \Lambda$ \Comment{Design matrix with regularization}
+        \State $\hat{\alpha}_t \gets V_t^{-1} X_t^\top r$ \Comment{Ridge regression estimator}
+        \State $c_t \gets 2R \sqrt{d \log(1 + t/\lambda) + 2 \log(1/\delta)} + C$ \Comment{Confidence radius}
+        \State Choose node $v_t$ as:
+        \[
+            v_t \gets \argmax_{v \in \{1, \dots, N\}} \left( f_{\hat{\alpha}}(v) + c_t \cdot \| x_v \|_{V_t^{-1}} \right)
+        \]
+        \Comment{UCB rule using spectral embedding}
+        \State Observe reward $r_t$ at node $v_t$
+    \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+(2) Dueling bandit is a special case of multi-armed bandit problem, instead of directly getting the reward, but recieve the pairwise comparison between two arms. \\
+So we can use a matrix $W$ to record the recieved pairwise comparison between two arms. Suppose we have $K$ arms, since it may have cases that arms are not compared, so define $\dfrac{x}{0}=1$.
+
+Reference: \href{https://arxiv.org/pdf/1312.3393}{\textit{Relative Upper Condence Bound for the K-Armed Dueling Bandit Problem}}.
+
+The pseudocode of the UCB algorithm for dueling bandits is as follows:
+
+\vspace{-0.3cm}
+\begin{algorithm}[h]
+    \caption{UCB Algorithm for graph bandits dueling bandits}
+    \textbf{Input:} $c, T, K$
+    \begin{algorithmic}[1]
+    \State $\mathbf{W} = [w_{ij}] \gets \mathbf{0}_{K \times K}$ \Comment{Matrix of wins: $w_{ij}$ is the number of times $a_i$ beat $a_j$}
+    \For{$t = 1, \ldots, T$}
+        \State Compute matrix $\mathbf{U} = [u_{ij}]$ as: $u_{ij} \gets \begin{cases}
+        \frac{w_{ij}}{w_{ij} + w_{ji}} + \sqrt{\frac{c \ln t}{w_{ij} + w_{ji}}} & \text{if } i \neq j \\
+        \frac{1}{2} & \text{ if } i = j
+        \end{cases}$
+        \State Select arm $a_c$ satisfying $u_{cj} \ge \frac{1}{2}, \forall j \neq c$; if no such $c$ exists, pick $c$ uniformly at random
+        \State Select opponent $a_d$ as $d \gets \argmax\limits_{j \neq c} u_{jc}$ \Comment{Arm with highest UCB against $a_c$}
+        \State Compare arms $a_c$ and $a_d$, observe winner
+        \If{$a_c$ wins}
+            \State $w_{cd} \gets w_{cd} + 1$
+        \Else
+            \State $w_{dc} \gets w_{dc} + 1$
+        \EndIf
+    \EndFor
+    \State \textbf{Return:} Arm $a_c$ with the largest number of arms $j$ such that: $\frac{w_{cj}}{w_{cj} + w_{jc}} > \frac{1}{2}$
+    \end{algorithmic}
+\end{algorithm}
+\vspace{-0.5cm}
+
+(3) Combinatorial bandit is a special case of multi-armed bandit problem, for each time, the selection is a set of arms, and the reward is a function of the selected arms. \\
+Each time we estimate each arm's reward $\bar{\mu}_i$, and solve a combinatorial problem by selecting the best combination from all valid selections $\mathcal{S}$, which is named as `Oracle'.
+
+Reference: \href{https://arxiv.org/abs/1407.8339}{\textit{Combinatorial Multi-Armed Bandit and Its Extension to Probabilistically Triggered Arms}}.
+
+The pseudocode of the UCB algorithm for combinatorial bandits is as follows:
+
+\vspace{-0.3cm}
+\begin{algorithm}[h]
+    \caption{Combinatorial UCB (CUCB)}
+    \textbf{Input:} Total number of base arms $m$, oracle access to action set $\mathcal{S} \subseteq 2^{[m]}$
+    \begin{algorithmic}[1]
+    \For{each base arm $i \in [m]$}
+        \State $T_i \gets 0$ \Comment{Number of times base arm $i$ has been played}
+        \State $\hat{\mu}_i \gets 1$ \Comment{Initial empirical mean reward for base arm $i$}
+    \EndFor
+    \For $t = 1,\cdots, T$
+        \State $t \gets t + 1$
+        \For{each base arm $i \in [m]$}
+            \State $\bar{\mu}_i \gets \min \left\{ \hat{\mu}_i + \sqrt{\frac{3 \ln t}{2 T_i}},\ 1 \right\}$
+        \EndFor
+        \State $S_t \gets \text{Oracle}(\bar{\mu}_1, \bar{\mu}_2, \dots, \bar{\mu}_m)$ \Comment{Solve combinatorial problem using optimistic estimates}
+        \State Play action $S_t$, observe rewards $X_{i,t}$ for each $i \in S_t$
+        \For{each $i \in S_t$}
+            \State $T_i \gets T_i + 1$
+            \State $\hat{\mu}_i \gets \hat{\mu}_i + \frac{1}{T_i}(X_{i,t} - \hat{\mu}_i)$ \Comment{Update empirical mean}
+        \EndFor
+    \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+(4) Neural bandit is a special case of multi-armed bandit problem, each time we can recieve an arm's contextual information $\left\{x_{t,a}\right\}_{a=1}^K$ with total $K$ arms, and use neural network to predict the reward $\hat{r}_{t,a}$. As for the exploration part of UCB, $\gamma_t$ is computed through a theoritial bound with the Neural Tangent Kernel, which could be detailedly found in the paper. $Z$ could be regarded as the covariance matrix of the parameters of the neural network. $g(x_t;\theta)$ is the gradient of the neural network $f(x_t;\theta)$. And after each steps, the neural network is updated through a $J$ step's gradient descent with step size $\eta$ with criterion of minimizing the L2-loss between the estimated reward and the true reward, with regularization term $m\lambda\|\theta-\theta_0\|^2$. Additionally, $m$ is the width of the network to ensure the NTK is well-defined.
+
+Reference: \href{https://arxiv.org/abs/1407.8339}{\textit{Neural contextual bandits with ucb-based exploration}}.
+
+The pseudocode of the UCB algorithm for Neural bandits is as follows:
+
+\begin{algorithm}[h]
+    \caption{NeuralUCB}
+    \textbf{Input:} Number of rounds $T$, regularization parameter $\lambda$, exploration parameter $\nu$, confidence parameter $\delta$, norm bound $S$, step size $\eta$, number of gradient steps $J$, network width $m$, depth $L$
+
+    \begin{algorithmic}[1]
+    \State Randomly initialize network parameters $\theta_0$
+    \State Initialize $Z_0 \gets \lambda I$
+    \For{$t = 1$ to $T$}
+        \State Observe context vectors $\{x_{t,a}\}_{a=1}^K$
+        \For{$a = 1$ to $K$}
+            \State Compute predicted reward: $\hat{r}_{t,a} \gets f(x_{t,a}; \theta_{t-1})$
+            \State Compute uncertainty:
+            \[
+            U_{t,a} \gets \hat{r}_{t,a} + \gamma_{t-1} \cdot \sqrt{\frac{1}{m} g(x_{t,a};\theta_{t-1})^\top Z_{t-1}^{-1} g(x_{t,a};\theta_{t-1})}
+            \]
+        \EndFor
+        \State Select action: $a_t \gets \argmax\limits_{a \in [K]} U_{t,a}$
+        \State Play arm $a_t$ and observe reward $r_{t, a_t}$
+        \State Update covariance matrix:
+        \[
+        Z_t \gets Z_{t-1} + \frac{1}{m} g(x_{t,a_t}; \theta_{t-1}) g(x_{t,a_t}; \theta_{t-1})^\top
+        \]
+        \State Train $\theta_t \gets \text{TrainNN}(\lambda, \eta, J, m, \{x_{i,a_i}\}_{i=1}^t, \{r_{i,a_i}\}_{i=1}^t, \theta_0)$
+        \State $\gamma_t \gets$ computed theoritial bound based on NTK
+    \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+\newpage

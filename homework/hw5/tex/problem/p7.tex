@@ -1,0 +1,60 @@
+\begin{homeworkProblem}
+
+\textbf{Bonus Problem: Accepting the Best Offer.}
+
+A senior undergraduate student of SIST in ShanghaiTech University have applied many top graduate programs around the world. He is now presented with $n$ offers in a sequential order. After looking at an offer, he must decide whether to accept it (and terminate the process) or to refuse it. Once refuseed, an offer is lost. Suppose that the only information he has at any time is the relative rank of the present offer compared with previously ones. His objective is to maximize the probability of selecting the best offer when all $n!$ orderings of the offers are assumed to be equally likely. Please help help him to find the optimal policy and compute the corresponding probability.
+
+\solution
+
+The optimal solution is the following policy: refuse the first $\left\lfloor \dfrac{n}{e} \right\rfloor$ offers, and mark the best offer among them be `$Best$'. Then looking for the remaining offers sequentially, when meet the first offer that is better than `$Best$', accept it.
+
+Proof: \\
+1. Firstly, we need to show that this method is optimal that refusing the first $m$ offers at first. \\
+According to the settings, it is a normal thought that we would not recieve the $i$-th offer if it is not the best among the first $i$ offers. So when the $i$-th offer comes($i=1,\cdots,n-1$), we have $2$ choices: accept or refuse. Let $A_i$ donates the probability that accepting the $i$-th offer, and we recieved that best offer among all $n$ offers. And $R_i$ donates refuseing the $i$-th offer, then the maximum probability that we can recieves that best offer. So the probability that we can recieve the best offer is:
+$$B_i = \max\{A_i, R_i\}$$
+If we accept the $i$-th offer, which means that it is the best offer among the first $i$ offers. Thus the probability that $i$-th offer is the best offer among all $n$ offers is:
+\begin{align*}
+A_i &= P(\text{$i$-th offer is the best offer among all $n$ offers | $i$-th offer is the best offer among the first $i$ offers}) \\
+&= \dfrac{\frac{(i-1)!}{i!}}{\frac{(n-1)!}{n!}} \\
+&= \dfrac{i}{n}
+\end{align*}
+And from the definition of $R_i$: the maximal probability of accepting the best offer when we have refuseed the first $i$ offers, which is obviously deceasing. And since $A_i$ is increasing, thus there must exists a $m\in\{1,2,\cdots,n-1\}$, s.t.
+\begin{align*}
+A_i &\leq R_i, \quad i \leq m \\
+A_i &> R_i,\quad i > m
+\end{align*}
+Therefore, the optimal policy must be that: refuse the first $m$ offers and then accept the first offer which satisfies it has higher value than any of its predecessors. Thus, we need to find the optimal $m$.
+
+2. Find the optimal $m$: \\
+Define $B$ donates the event that getting the best offer, $P_m$ donates using this policy, using LOTP with extra conditioning, we can get that:
+\begin{align*}
+P(B|P_m) &= \sum_{i=1}^{n-m} P(B_m | \text{accept ($i+m$)-th offer}, P_m) \cdot P(\text{accept ($i+m$)-th offer}|P_m) \\
+&= \sum_{i=1}^{n-m} A_{i+m} \cdot P(\text{accept ($i+m$)-th offer}|P_m)
+\end{align*}
+And if we use the policy $P_m$, and recieves the ($i+m$)-th offer, then it means that the ($i+m$)-th offer is the first offer that is better than the best offer among the first $m$-th offers. So the best offer among the first ($i+m-1$)-th offers should be in the first $m$ offers, whose probability $\dfrac{m\cdot (i+m-2)!}{(i+m-1)!}=\dfrac{m}{i+m-1}$. Also, it requires that the ($i+m$)-th offer is the best offer among the first $i+m$ offers, whose probability is $\dfrac{(i+m-1)!}{(i+m)!}=\dfrac{1}{i+m}$. So above all,
+\begin{align*}
+P(B|P_m) &= \sum_{i=1}^{n-m} A_{i+m} \cdot P(\text{accept ($i+m$)-th offer}|P_m) \\
+&= \sum_{i=1}^{n-m} \dfrac{i+m}{n} \cdot \dfrac{m}{i+m-1} \cdot \dfrac{1}{i+m} \\
+&= \dfrac{m}{n}\sum_{i=1}^{n-m} \dfrac{1}{i+m-1} \\
+&= \dfrac{m}{n}\sum_{i=m}^{n-1}\dfrac{1}{i} \\
+\text{(As $n\to\infty$)}\qquad &\approx \dfrac{m}{n} \int_{m}^{n-1} \dfrac{1}{x} \dx \\
+&= \dfrac{m}{n} \log \left(\dfrac{n-1}{m}\right) \\
+\text{(As $n\to\infty$)}\qquad &= \dfrac{m}{n} \log \left(\dfrac{n}{m}\right)
+\end{align*}
+Define
+$$f(m) = \dfrac{m}{n} \log \left(\dfrac{n}{m}\right)$$
+Thus
+\begin{align*}
+f'(m) &= \dfrac{1}{n} \log \left(\dfrac{n}{m}\right) - \dfrac{1}{n} \\
+f''(m) &= -\dfrac{1}{nm} < 0\\
+f'(m)=0 &\Rightarrow m=\dfrac{n}{e}
+\end{align*}
+Since $f(m)$ is concave, so $f(m)_{\max}=f\left(\dfrac{n}{e}\right)=\dfrac{1}{e}$. And since $m$ is a non-negative integer, so set $m=\left\lfloor \dfrac{n}{e} \right\rfloor$.
+
+So, the optimal policy is selecting $m=\left\lfloor \dfrac{n}{e} \right\rfloor$ as $n$ is large enough.
+
+So above all, we have proved that as $n$ is large enough, the policy we mentioned at the beginning is optimal. And the probability of selecting the best offer is $\dfrac{1}{e}$.
+
+\end{homeworkProblem}
+
+\newpage

@@ -1,0 +1,187 @@
+\documentclass{article}
+
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{enumerate}
+\usepackage{tikz}
+\usepackage{dsfont}
+\usepackage{booktabs, multirow, array} % draw tables
+\usepackage{hyperref}
+\usepackage{colortbl} % cellcolor
+\usetikzlibrary{arrows,automata,positioning}
+
+%
+% Basic Document Settings
+%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName}
+\chead{\hmwkClass : \hmwkTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+%
+% Create Problem Sections
+%
+
+\newcommand{\enterProblemHeader}[1]{
+    \nobreak\extramarks{}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \stepcounter{#1}
+    \nobreak\extramarks{Problem \arabic{#1}}{}\nobreak{}
+}
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+		\node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+\nobreak\extramarks{Problem \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+%
+% Homework Problem Environment
+%
+% This environment takes an optional argument. When given, it will adjust the
+% problem counter. This is useful for when the problems given for your
+% assignment aren't sequential. See the last 3 problems of this template for an
+% example.
+%
+
+\newenvironment{homeworkProblem}[1][-1]{
+    \ifnum#1>0
+        \setcounter{homeworkProblemCounter}{#1}
+    \fi
+    \section{Problem \arabic{homeworkProblemCounter}}
+    \setcounter{partCounter}{1}
+    \enterProblemHeader{homeworkProblemCounter}
+}{
+    \exitProblemHeader{homeworkProblemCounter}
+}
+
+%
+% Homework Details
+%   - Title
+%   - Class
+%   - Due date
+%   - Name
+%   - Student ID
+
+\newcommand{\hmwkTitle}{Homework\ \#05}
+\newcommand{\hmwkClass}{SI252 Reinforcement Learning}
+\newcommand{\hmwkDueDate}{April 30, 2025}
+\newcommand{\hmwkAuthorName}{Zhou Shouchen}
+\newcommand{\hmwkAuthorID}{2021533042}
+
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\\  \hmwkTitle}} \\
+    \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate\ at 11:59 p.m.(CST)} \\
+	\vspace{4in}
+}
+
+\author{
+	Name: \textbf{\hmwkAuthorName} \\
+	Student ID: \hmwkAuthorID}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+%
+% Various Helper Commands
+%
+
+% Useful for algorithms
+\newcommand{\alg}[1]{\textsc{\bfseries \footnotesize #1}}
+% For derivatives
+\newcommand{\deriv}[1]{\dfrac{\mathrm{d}}{\mathrm{d}x} (#1)}
+% For partial derivatives
+\newcommand{\pderiv}[2]{\dfrac{\partial}{\partial #1} (#2)}
+% Integral dx
+\newcommand{\dx}{\mathrm{d}x}
+\newcommand{\dt}{\mathrm{d}t}
+\newcommand{\du}{\mathrm{d}u}
+\newcommand{\dr}{\mathrm{d}r}
+\newcommand{\dS}{\mathrm{d}S}
+\newcommand{\dtheta}{\mathrm{d}\theta}
+\newcommand{\dphi}{\mathrm{d}\phi}
+\newcommand{\domega}{\mathrm{d}\omega}
+\newcommand{\dU}{\mathrm{d}U}
+\newcommand{\dV}{\mathrm{d}V}
+
+
+% Alias for the Solution section header
+\newcommand{\solution}{\textcolor{blue}{\textbf{Solution}}}
+% Probability commands: Expectation, Variance, Covariance, Bias
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\Bias}{\mathrm{Bias}}
+\newcommand{\Unif}{\operatorname{Unif}}
+\newcommand{\Beta}{\operatorname{Beta}}
+\newcommand{\Bin}{\operatorname{Bin}}
+\newcommand{\Bern}{\operatorname{Bern}}
+\newcommand{\Expo}{\operatorname{Expo}}
+\newcommand{\FS}{\operatorname{FS}}
+\newcommand{\Pois}{\operatorname{Pois}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\mS}{\mathcal{S}}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\mP}{\mathcal{P}}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\indep}{\perp \!\!\! \perp} % independent symbol
+\newcommand{\argmin}{\mathop{\rm argmin}}
+\newcommand{\argmax}{\mathop{\rm argmax}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\bpi}{\boldsymbol{\pi}}
+\newcommand{\cnt}{\text{count}}
+
+
+\begin{document}
+
+\maketitle
+\pagebreak
+
+\input{problem/p1}
+\input{problem/p2}
+\input{problem/p3}
+\input{problem/p4}
+\input{problem/p5}
+\input{problem/p6}
+\input{problem/p7}
+\input{problem/p8}
+
+\end{document}

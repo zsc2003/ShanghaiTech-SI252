@@ -1,0 +1,71 @@
+\begin{homeworkProblem}
+
+\textbf{Bonus Problem: Bayesian Bandit Process.}
+
+There are two arms which may be pulled repeatedly in any order. Each pull may result in either a success or a failure. The sequence of successes and failures which results from pulling arm $i$ ($i=1$ or $2$) forms a Bernoulli process with unknown success probability $\theta_i$. A success at the $t^{\text{th}}$ pull yields a reward $\gamma^{t-1}(0<\gamma<1)$, while an unsuccessful pull yields a zero reward. At time zero, each $\theta_i$ has a beta prior distribution with two parameters $\alpha_i, \beta_i$ and these distributions are independent for different arms. These prior distributions are updated to successive posterior distributions as arms are pulled. Since the class of beta distributions is closed under Bernoulli sampling, these posterior distributions are all beta distributions. How should the arm to pull next at each stage be chosen so as to maximize the total expected reward from an infinite sequence of pulls?
+
+(a) One intuitive policy suggests that at each stage we should pull the arm for which the current expected value of $\theta_i$ is the largest. This policy behaves very good in most cases. However, it is unfortunately not optimal. Please provide an example to show why such policy is not optimal.
+
+(b) For the expected total reward under an optimal policy, show that the following recurrence equation holds:
+\begin{align*}
+R_1\left(\alpha_1, \beta_1\right) &= \frac{\alpha_1}{\alpha_1+\beta_1}\left[1+\gamma R\left(\alpha_1+1, \beta_1, \alpha_2, \beta_2\right)\right]+\frac{\beta_1}{\alpha_1+\beta_1}\left[\gamma R\left(\alpha_1, \beta_1+1, \alpha_2, \beta_2\right)\right] \\
+R_2\left(\alpha_2, \beta_2\right) &= \frac{\alpha_2}{\alpha_2+\beta_2}\left[1+\gamma R\left(\alpha_1, \beta_1, \alpha_2+1, \beta_2\right)\right]+\frac{\beta_2}{\alpha_2+\beta_2}\left[\gamma R\left(\alpha_1, \beta_1, \alpha_2, \beta_2+1\right)\right] \\
+R\left(\alpha_1, \beta_1, \alpha_2, \beta_2\right) &= \max \left\{R_1\left(\alpha_1, \beta_1\right), R_2\left(\alpha_2, \beta_2\right)\right\}
+\end{align*}
+
+(c) Discuss the computational complexity of solving the above equation. How to solve it approximately?
+
+(d) Find the optimal policy. (Hint: Gittins index policy)
+
+\solution
+
+The codes for (a), (d) could be found in the `hw5\_code.ipynb' file.
+
+(a) One situation is that when the 2 arms' probability comes to be relatively close, we have that this algorithm will fail to give an optimal solution. Given an situation where $p_1=0.8, p_2=0.7$, by simulation, we will found out that the final probability of success is only about $0.8$ which is closer to the smaller probability $p_2$ instead of the larger probability $p_1$, which is not optimal. The priorior distributions for the two arms are all set to be $\Beta(1,1)$. The code simulate this situation, in the code, we estimate the expectation reward by giving reward=$\dfrac{p_i}{1 - \gamma}$ when the simulation number is larger enough if we stick to one arm. Then by compare the reward from the algorithm, we will determine which case the current simulation falls into.
+
+From the code simulation, we can find out that the among the $1000$ times simulation, most cases fall into the non-ideal cases, which is actually: when we choose the arm with probability $0.8$ and we make success, then the algothrim tends to give choice that the arm with probability $0.8$ is more likely to win as another arm hasn't beed shaked so is probability $0.5$ to win. Therefore we actually falls into a case that we stick to one arm with lower win probability $0.8$.
+
+So the number of getting the better arm is only 308 times, and the number of getting the worse arm is 692 times. So it chooses much more worse arm than the better arm, which is not optimal. So we could say that we have given a case to show that such policy is not optimal.
+
+(b) At time zero, each arm has a prior $\hat{\theta}_i\sim\Beta(\alpha_{i}, \beta_{i})$ and these distributions are independent for different arms. Suppose that we pull the arm 1 at time zero: \\
+<1> If it successes, we can recieve the reward $\gamma^0=1$. And the parameters become $\Beta(\alpha_1+1,\beta_1,\alpha_2,\beta_2)$ due to the Beta-Binoimal conjugate. After the discount, the future's reward is $\gamma R(\alpha_1+1,\beta_1,\alpha_2,\beta_2)$. Also, since success happens with probability $\hat{\theta}_1$. So the total rewards when success at this time is
+$$\hat{\theta}_1[1+\gamma R(\alpha_1+1,\beta_1,\alpha_2,\beta_2)]$$
+
+<2> If it fails, we can recieve the reward $0$. And the parameters become $(\alpha_1,\beta_1+1,\alpha_2,\beta_2)$ due to the Beta-Binoimal conjugate. After the discount, the future's reward is $0+\gamma R(\alpha_1,\beta_1+1,\alpha_2,\beta_2)$. Also, since failure happens with probability $1-\hat{\theta}_1$. So the total rewards when fails at this time is
+$$(1-\hat{\theta}_1)[0+\gamma R(\alpha_1,\beta_1+1,\alpha_2,\beta_2)]=(1-\hat{\theta_1})[\gamma R(\alpha_1,\beta_1+1,\alpha_2,\beta_2)]$$
+So combine the two parts, we can get that the total expected rewards when pull the arm 1 is that
+\begin{align*}
+R_1(\alpha_1,\beta_1) &= \E\left[\hat{\theta}_1[1+\gamma R(\alpha_1+1,\beta_1,\alpha_2,\beta_2)]+(1-\hat{\theta}_1)[\gamma R(\alpha_1,\beta_1+1,\alpha_2,\beta_2)]\right] \\
+&= \E\left(\hat{\theta}_1\right)[1+\gamma R(\alpha_1+1,\beta_1,\alpha_2,\beta_2)]+\E\left(1-\hat{\theta}_1\right)[\gamma R(\alpha_1,\beta_1+1,\alpha_2,\beta_2)] \\
+\left(\hat{\theta}_1\sim\Beta(\alpha_1,\beta_1)\right)\quad &= \dfrac{\alpha_1}{\alpha_1+\beta_1}[1+\gamma R(\alpha_1+1,\beta_1,\alpha_2,\beta_2)]+\dfrac{\beta_1}{\alpha_1+\beta_1}[\gamma R(\alpha_1,\beta_1+1,\alpha_2,\beta_2)]
+\end{align*}
+And we can get the total expected rewards when pull the arm 2 in a exactly same method, and it is:
+\begin{align*}
+R_2(\alpha_2,\beta_2) &= \E\left[\hat{\theta}_2[1+\gamma R(\alpha_1,\beta_1,\alpha_2+1,\beta_2)]+(1-\hat{\theta}_2)[\gamma R(\alpha_1,\beta_1,\alpha_2,\beta_2+1)]\right] \\
+\left(\hat{\theta}_2\sim\Beta(\alpha_2,\beta_2)\right)\quad &= \dfrac{\alpha_2}{\alpha_2+\beta_2}[1+\gamma R(\alpha_1,\beta_1,\alpha_2+1,\beta_2)]+\dfrac{\beta_2}{\alpha_2+\beta_2}[\gamma R(\alpha_2,\beta_1,\alpha_2,\beta_2+1)]
+\end{align*}
+
+And since for each step, we want to maximize the total reward, i.e. choose the arm that could recieves the maximum the expected future total rewards, so we can get that:
+$$R(\alpha_1,\beta_1,\alpha_2,\beta_2)=\max\{R_1(\alpha_1,\beta_1),R_2(\alpha_2,\beta_2)\}$$
+
+So above all, the following recurrence equation holds have been proven.
+\begin{align*}
+R_1\left(\alpha_1, \beta_1\right) &= \frac{\alpha_1}{\alpha_1+\beta_1}\left[1+\gamma R\left(\alpha_1+1, \beta_1, \alpha_2, \beta_2\right)\right]+\frac{\beta_1}{\alpha_1+\beta_1}\left[\gamma R\left(\alpha_1, \beta_1+1, \alpha_2, \beta_2\right)\right] \\
+R_2\left(\alpha_2, \beta_2\right) &= \frac{\alpha_2}{\alpha_2+\beta_2}\left[1+\gamma R\left(\alpha_1, \beta_1, \alpha_2+1, \beta_2\right)\right]+\frac{\beta_2}{\alpha_2+\beta_2}\left[\gamma R\left(\alpha_1, \beta_1, \alpha_2, \beta_2+1\right)\right] \\
+R\left(\alpha_1, \beta_1, \alpha_2, \beta_2\right) &= \max \left\{R_1\left(\alpha_1, \beta_1\right), R_2\left(\alpha_2, \beta_2\right)\right\}
+\end{align*}
+
+(c) Since to calculate $R(\alpha_1, \beta_1, \alpha_2, \beta_2)$, we need $R(\alpha_1+1, \beta_1, \alpha_2, \beta_2), R(\alpha_1, \beta_1+1, \alpha_2, \beta_2), R(\alpha_1, \beta_1, \alpha_2+1, \beta_2), R(\alpha_1, \beta_1, \alpha_2, \beta_2+1)$, which could goes infinitely far. Since the discount factor $\gamma\in(0,1)$, which means that we can regard after steps of iteration, the expected future rewards is $\gamma^t$, which is significantly small, so the iteration could stop. Suppose that the threshold of the number of iterations is $N$, i.e. after $t>N$, we stop the iteration.
+
+To save the computational complexity, we can use the memorization technique, which is to store the results of previous calculations in a table. Thus the computational complexity is reduced to $O(N^4)$, and we requires the space complexity to $O(N^4)$.
+
+To solve the approximate, we only need to consider the corner cases, i.e. when $t=N$, which is the iteration before stops. We could regard that there have a sufficient exploration, thus we can directly compare their expectation, i.e. $\dfrac{\alpha_1}{\alpha_1+\beta_1}$ and $\dfrac{\alpha_2}{\alpha_2+\beta_2}$.
+
+(d) The optimal policy is that when the pulling turn is more than $N$ times, we choose the arm with the bigger expection. \\
+Otherwise, we can firstly calculate the $R_1,R_2$ of each arm, then choose the arm with the bigger $R_i$.
+
+The implementation could be found in `hw5\_code.ipynb'.
+
+\end{homeworkProblem}
+
+\newpage

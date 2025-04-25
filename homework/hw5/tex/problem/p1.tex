@@ -1,0 +1,247 @@
+\begin{homeworkProblem}
+\textbf{Proofs} \\
+(a) Reproduce the proofs of Bellman Expectation Equations for Markov Decision Processes (MDPs).
+
+(b) Reproduce the proofs of Bellman Optimality Equations for Markov Decision Processes (MDPs).
+
+(c) Reproduce the proofs of Policy Improvement by acting greedily.
+
+\solution
+
+(a) The Bellman Expectation Equations for MDPs have $2$ Expectation forms, and $4$ summation forms. \\
+$G_t$ is the future accumulated reward: $G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots$, $v_{\pi(s)}$ is the value function under the policy $\pi$, $q_{\pi}(s, a)$ is the value-state function under the policy $\pi$.
+
+1.1 The state value function's expectation form: From the definition, we can get that
+\begin{align*}
+v_{\pi}(s) &= \E[G_t|S_t=s] \\
+&= \E_{\pi}[R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots | S_t=s] \\
+&= \E_{\pi}[R_{t+1} + \gamma (R_{t+2} + \gamma R_{t+3} + \ldots) | S_t=s] \\
+&= \E_{\pi}[R_{t+1} + \gamma G_{t+1} | S_t=s] \\
+&= \E_{\pi}[R_{t+1}| S_t=s] + \gamma \E_{\pi}[G_{t+1} | S_t=s]
+\end{align*}
+Then we need to focus on $\E[G_{t+1} | S_t=s]$. According to Adam's law with extra conditioning, we have
+$$\E[\E(Y|X,Z)|Z] = \E[Y|Z]$$
+Let $Y=G_{t+1}, X=S_{t+1}$ and $Z=S_t$, where $S_{t+1}, S_t$ are random variables, thus we have:
+$$\E_{\pi}[\E_{\pi}(G_{t+1}|S_{t+1},S_t)|S_t] = \E_{\pi}[G_{t+1}|S_t]$$
+According to the Markov property, we can also get that
+$$\E_{\pi}(G_{t+1}|S_{t+1},S_t)=\E_{\pi}(G_{t+1}|S_{t+1})=v_{\pi}(S_{t+1}) \Rightarrow \E_{\pi}[\E_{\pi}(G_{t+1}|S_{t+1},S_t)|S_t]=\E_{\pi}[\E_{\pi}(G_{t+1}|S_{t+1})|S_t]=\E_{\pi}[v_{\pi}(S_{t+1})|S_t]$$
+Combine the above two equations, we can get that
+$$\E_{\pi}[G_{t+1}|S_t] = \E_{\pi}[v_{\pi}(S_{t+1})|S_t]\Rightarrow \ \ \forall s\in\mS,\ \E_{\pi}[G_{t+1}|S_t=s] = \E_{\pi}[v_{\pi}(S_{t+1})|S_t=s]$$
+Put it into the original eqution, we can get that
+\begin{align*}
+v_{\pi}(s) &= \E_{\pi}[R_{t+1}| S_t=s] + \gamma \E_{\pi}[G_{t+1} | S_t=s] \\
+&= \E_{\pi}[R_{t+1}|S_t=s] + \gamma \E_{\pi}[v_{\pi}(S_{t+1}) |S_t = s] \\
+&= \E_{\pi}[R_{t+1} + \gamma v_{\pi}(S_{t+1}) |S_t = s]
+\end{align*}
+
+1.2 The state-action value function's expectation form: From the definition, we can get that
+$$q_{\pi}(s,a) = \E_{\pi}[G_t | S_t=s, A_t=a]$$
+Change $S_t, A_t$ into random variables, we have:
+\begin{align*}
+q_{\pi}(S_t,A_t) &= \E_{\pi}[G_t |S_t, A_t] \\
+q_{\pi}(S_t,A_{t+1}) &= \E_{\pi}[G_{t+1} |S_{t+1}, A_{t+1}]
+\end{align*}
+Then again, use the Adam's law with extra conditioning, let $Y=G_{t+1}$, $Z=(S_t, A_t)$ and $X=(S_{t+1}, A_{t+1})$:
+\begin{align*}
+&\quad\ \E_{\pi}[G_{t+1}|S_t, A_t] \\
+(\text{Adam's law})\qquad &= \E_{\pi}[\E_{\pi}[G_{t+1}|S_{t+1}, A_{t+1}, S_t, A_t]|S_t, A_t] \\
+(\text{Markov property})\qquad &= \E_{\pi}[\E_{\pi}[G_{t+1}|S_{t+1}, A_{t+1}]|S_t, A_t] \\
+&= \E_{\pi}[q_{\pi}(S_{t+1}, A_{t+1})|S_t, A_t] \\
+\Rightarrow\ \ \forall a\in\A, s\in\mS, \E_{\pi}[G_{t+1}|S_t=s, A_t=a] &= \E_{\pi}[q_{\pi}(S_{t+1}, A_{t+1})|S_t=s, A_t=a]
+\end{align*}
+Put it into the original eqution, we can get that
+\begin{align*}
+q_{\pi}(s,a) &= \E_{\pi}[G_{t}|S_t=s, A_t=a] \\
+&= \E_{\pi}[R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots | S_t=s, A_t=a] \\
+&= \E_{\pi}[R_{t+1} + \gamma (R_{t+2} + \gamma R_{t+3} + \ldots) | S_t=s, A_t=a] \\
+&= \E_{\pi}[R_{t+1}+\gamma G_{t+1}|S_t=s, A_t=a] \\
+&= \E_{\pi}[R_{t+1}|S_t=s, A_t=a] +\gamma \E_{\pi}[G_{t+1}|S_t=s, A_t=a] \\
+(\text{last proof})\qquad &= \E_{\pi}[R_{t+1}|S_t=s, A_t=a] +\gamma \E_{\pi}[q_{\pi}(S_{t+1}, A_{t+1})|S_t=s, A_t=a] \\
+&= \E_{\pi}[R_{t+1}+\gamma q_{\pi}(S_{t+1}, A_{t+1})|S_t=s, A_t=a]
+\end{align*}
+
+2.1. Summation form, $q\to v$: \\
+Directly using LOTE to the definition of state value function, we can get that
+\begin{align*}
+v_{\pi}(s) &= \E_{\pi}[G_t|S_t=s] \\
+\text{(LOTE)}\qquad &= \sum_{a\in\A} \E_{\pi}[G_t|S_t=s, A_t=a]P(A_t=a|S_t=s) \\
+&= \sum_{a\in\A} q_{\pi}(s, a)\pi(a|s)
+\end{align*}
+
+2.2. Summation form, $v\to q$:
+\begin{align*}
+&\quad\ \E_{\pi}[q_{\pi}(S_{t+1}, A_{t+1})|S_{t+1}=s', S_t=s, A_t=a] \\
+\text{(LOTE)}\quad &= \sum_{a' \in \A} \E_{\pi}[q_{\pi}(S_{t+1}, A_{t+1})|S_{t+1}=s', A_{t+1}=a', S_t=s, A_t=a] P(A_{t+1}=a' | S_{t+1}=s', S_t=s, A_t=a) \\
+\text{(Markov property)}\quad &= \sum_{a' \in \A} \E_{\pi}[q_{\pi}(S_{t+1}, A_{t+1})|S_{t+1}=s', A_{t+1}=a'] P( A_{t+1}=a' | S_{t+1}=s') \\
+&= \sum_{a' \in \A} a_{\pi}(s',a')\pi(a'|s') \\
+\text{(Conclusion in 2.1)}\quad &= v^{\pi}(s')
+\end{align*}
+
+Using LOTE, put the above conclusion, we can get that
+\begin{align*}
+&\quad\ \E_{\pi}[q_{\pi}(S_{t+1}, A_{t+1})| S_t=s, A_t=a] \\
+\text{(LOTE)}\qquad &= \sum_{s' \in \mS} \E_{\pi}[q_{\pi}(S_{t+1}, A_{t+1})|S_{t+1}=s', A_t=a, S_t=s] P( A_{t+1}=a | S_{t}=s, A_t=a) \\
+\text{(Last proof)}\quad &= \sum_{s' \in \mS} v_{\pi}(s')\mP_{s,s'}^a
+\end{align*}
+
+The put it into the state-action value function's expectation form:
+\begin{align*}
+q_{\pi}(s,a) &= \E_{\pi}[R_{t+1}+\gamma q_{\pi}(S_{t+1}, A_{t+1})|S_t=s, A_t=a] \\
+&= \E_{\pi}[R_{t+1}|S_t=s, A_t=a] + \gamma \E_{\pi}[q_{\pi}(S_{t+1}, A_{t+1})|S_t=s, A_t=a] \\
+&= \R_s^a + \gamma \sum_{s' \in \mS}v_{\pi}(s')\mP_{s,s'}^a
+\end{align*}
+
+2.3. Summation form, $v\to v$: \\
+Combining 2.1 and 2.2, we can get that
+\begin{align*}
+v_{\pi}(s) &= \sum_{a\in\A} \pi(a|s)q_{\pi}(s, a) \\
+&= \sum_{a\in\A} \pi(a|s)\left(\R_s^a + \gamma \sum_{s' \in \mS}\mP_{s,s'}^av_{\pi}(s')\right)
+\end{align*}
+
+2.4. Summation form, $q\to q$: \\
+Combining 2.2 and 2.1, we can get that
+\begin{align*}
+q_{\pi}(s,a) &= \R_s^a + \gamma \sum_{s' \in \mS}\mP_{s,s'}^av_{\pi}(s') \\
+&= \R_s^a + \gamma \sum_{s' \in \mS}\mP_{s,s'}^a\left(\sum_{a'\in\A} \pi(a'|s')q_{\pi}(s', a')\right)
+\end{align*}
+
+So above all, we have proved the exceptation forms and summation forms of Bellman Expectation Equations for MDPs:
+$$\begin{cases}
+v_{\pi}(s) &= \E[R_{t+1} + \gamma v_{\pi}(S_{t+1}) |S_t = s] \\
+q_{\pi}(s,a) &= \E_{\pi}[R_{t+1}+\gamma q_{\pi}(S_{t+1}, A_{t+1})|S_t=s, A_t=a]
+\end{cases} \quad \Rightarrow \quad \begin{cases}
+v_{\pi}(s) &= \sum\limits_{a\in\A} q_{\pi}(s, a)\pi(a|s) \\
+q_{\pi}(s,a) &= \R_s^a + \gamma \sum\limits_{s' \in \mS}v_{\pi}(s')\mP_{s,s'}^a \\
+v_{\pi}(s) &= \sum\limits_{a\in\A} \pi(a|s)\left(\R_s^a + \gamma \sum\limits_{s' \in \mS}\mP_{s,s'}^av_{\pi}(s')\right) \\
+q_{\pi}(s,a) &= \R_s^a + \gamma \sum_{s' \in \mS}\mP_{s,s'}^a\left(\sum\limits_{a'\in\A} \pi(a'|s')q_{\pi}(s', a')\right)
+\end{cases}$$
+
+(b) Similarly to the Bellman Exceptation Equation, the Bellman Optimality Equation also has 4 forms. \\
+1. $q_*\to v_*$: \\
+According to the definition of optimal, and conclusions from (a), we can get that:
+\begin{align*}
+v_*(s) &= \max_{\pi} v_{\pi}(s) \\
+\text{((a) 2.1)}\quad &= \max_{\pi} \sum_{a\in\A} \pi(a|s)q_{\pi}(s,a) \\
+\text{(Linear Programming)}\quad &= \max_{\pi}\max_{a} q_{\pi}(s,a) \\
+&= \max_{a}\max_{\pi} q_{\pi}(s,a) \\
+\text{(Definition of $q_*$)}\quad &= \max_{a} q_*(s,a)
+\end{align*}
+The third equation holds due to $\sum\limits_{a\in\A} \pi(a|s)q_{\pi}(s,a)$ is the convex combination of $q_{\pi}(s,a)$, and it's maximum value is obviously the maximum value of $q_{\pi}(s,a)$ with the conclusion in the convex optimization.
+
+2. $v_*\to q_*$: \\
+From (a) 2.2, we can get that
+$$q_{\pi}(s,a) = \R_s^a + \gamma \sum_{s' \in \mS} v_{\pi}(s')\mP_{s,s'}^a$$
+According to the definition of $q_*$, we can get that
+$$q_{*}(s,a) = \max_{\pi} q_{\pi}(s,a) = \R_s^a +\gamma \sum_{s' \in \mS} \mP_{s,s'}^a\left(\max_{\pi}v_{\pi}(s')\right) = \R_s^a + \gamma \sum_{s' \in \mS} \mP_{s,s'}^av_*(s')$$
+Also, according to the definition of reward functions, we can get that
+$$\R_s^a=\E(R_{t+1}|S_t=s, A_t=a)$$
+And since when $S_{t+1}=s'$ is given, the expectation becomes a constant, i.e. $\E[v_*(S_{t+1})|S_{t+1}=s']=v_*(s')$, so
+\begin{align*}
+&\quad\ \E[v_*(S_{t+1})|S_t=s, A_t=a] \\
+\text{(LOTE)}\quad &= \sum_{s' \in \mS} \E[v_*(S_{t+1}) |S_{t+1} = s', S_t = s, A_t = a]\cdot P(S_{t+1} = s'| S_t = s, A_t = a) \\
+&= \sum_{s' \in \mS} v_*(s') \mP_{s,s'}^a
+\end{align*}
+Thus, combine all infomation above, we can get that
+\begin{align*}
+q_*(s,a) &= \R_s^a + \gamma \sum_{s' \in \mS} \mP_{s,s'}^av_*(s') \\
+&= \E(R_{t+1}|S_t=s, A_t=a) + \gamma\E[v_*(S_{t+1})|S_t=s, A_t=a] \\
+&= \E[R_{t+1} + \gamma v_*(S_{t+1})|S_t=s, A_t=t]
+\end{align*}
+So above all, we have proved that
+$$q_{*}(s,a) = \R_s^a + \gamma \sum_{s' \in \mS} \mP_{s,s'}^av_*(s') \Leftrightarrow q_*(s,a) = \E[R_{t+1}+\gamma v_*(S_{t+1})|S_t=s,A_t=a]$$
+
+3. $v_*\to v_*$: \\
+Combine 1. and 2., we can get that
+\begin{align*}
+v_*(s) &= \max_{a} q_*(s,a) \\
+\text{(From 2.)}\quad &= \max_{a}\ \left(\R_s^a + \gamma \sum_{s' \in \mS} \mP_{s,s'}^av_*(s')\right) \\
+\text{(From 2.)}\quad &= \max_{a}\ \left(\E[R_{t+1}+\gamma v_*(S_{t+1})|S_t=s,A_t=a]\right)
+\end{align*}
+
+4. $q_*\to q_*$: Combine 2. and 1., we can get that
+\begin{align*}
+q_*(s,a) &= \R_s^a + \gamma \sum\limits_{s' \in \mS} \mP_{s,s'}^av_*(s') \\
+\text{(From 1.)}\quad &= \R_s^a + \gamma \sum\limits_{s' \in \mS} \mP_{s,s'}^a\max_{a'} q_*(s',a')
+\end{align*}
+Also, according to the definition of reward functions, we can get that
+$$\R_s^a=\E(R_{t+1}|S_t=s, A_t=a)$$
+And since when $S_{t+1}=s'$ is given, the expectation becomes a constant, i.e.
+$$\E[\max_{a'}q_*(S_{t+1},a')|S_{t+1}=s']=\max_{a'}q_*(s',a')$$
+Use this property, we can get that
+\begin{align*}
+&\quad\ \E[\max_{a'}q_*(S_{t+1},a')|S_t=s, A_t=a] \\
+\text{(LOTE)}\quad &= \sum_{s' \in \mS} \E[\max_{a'}q_*(S_{t+1},a') |S_{t+1} = s', S_t = s, A_t = a]\cdot P(S_{t+1} = s'| S_t = s, A_t = a) \\
+&= \sum_{s' \in \mS} \max_{a'}q_*(s',a') \mP_{s,s'}^a
+\end{align*}
+Thus, combine all infomation above, we can get that
+\begin{align*}
+q_*(s,a) &= \R_s^a + \gamma \sum\limits_{s' \in \mS} \mP_{s,s'}^a\max_{a'} q_*(s',a') \\
+&= \E(R_{t+1}|S_t=s, A_t=a) + \gamma\E[\max_{a'}q_*(S_{t+1},a')|S_t=s, A_t=a] \\
+&= \E[R_{t+1} + \gamma \max_{a'}q_*(S_{t+1},a')|S_t=s, A_t=t]
+\end{align*}
+
+So above all, we have proved that
+$$q_{*}(s,a) = \R_s^a + \gamma \sum\limits_{s' \in \mS} \mP_{s,s'}^a\max_{a'} q_*(s',a') \Leftrightarrow q_{*}(s,a) = \E[R_{t+1} + \gamma \max_{a'}q_*(S_{t+1},a')|S_t=s, A_t=t]$$
+
+So, we have proved the Bellman Optimality Equations for MDPs:
+$$\begin{cases}
+v_*(s) = \max\limits_{a} q_*(s,a) \\
+q_{*}(s,a) = \R_s^a + \gamma \sum\limits_{s' \in \mS} \mP_{s,s'}^av_*(s') &\Leftrightarrow q_*(s,a) = \E[R_{t+1}+\gamma v_*(S_{t+1})|S_t=s,A_t=a] \\
+v_*(s) = \max\limits_{a}\ \left(\R_s^a + \gamma \sum\limits_{s' \in \mS} \mP_{s,s'}^av_*(s')\right) &\Leftrightarrow v_*(s) = \max\limits_{a}\ \left(\E[R_{t+1}+\gamma v_*(S_{t+1})|S_t=s,A_t=a]\right) \\
+q_{*}(s,a) = \R_s^a + \gamma \sum\limits\limits_{s' \in \mS} \mP_{s,s'}^a\max\limits_{a'} q_*(s',a') &\Leftrightarrow q_{*}(s,a) = \E[R_{t+1} + \gamma \max\limits_{a'}q_*(S_{t+1},a')|S_t=s, A_t=t]
+\end{cases}$$
+
+(c) What we need to prove is that for a policy $\pi(s)$, applying Policy Improvement by acting greedily to generate
+$$\pi'(s) = \argmax_{a\in\A} q_{\pi}(s,a)$$
+Then both the state value function and the state-action value function will be both improved. Here we consider the ppolicy is deterministic, i.e. $a=\pi(s)$.
+
+1. state-action value function: \\
+According to the definition of policy improvement, we can get that $\forall s\in\mS$:
+\begin{align*}
+q_{\pi}(s,a) &= q_{\pi}(s,\pi'(s)) \\
+&= \max_{a\in\A}q_{\pi}(s,a) \quad\text{(Update rule)} \\
+&\geq q_{\pi}(s,a) \ \forall a\in\A \\
+&\geq q_{\pi}(s,\pi(s)) \\
+&= v_{\pi}(s)
+\end{align*}
+
+2. action value function: \\
+Here we define $\E_{\pi'}[R_{t+1}+\gamma v_{\pi}(S_{t+1})|S_t=s]$ representing that the expected discounted reward when starting in state $s$, choosing action accoding to policy $\pi'$ for the next step, and then choos actions \textbf{according to policy $\pi$ thereafter}! In other words, the next one step is using $\pi'$, and the following steps are using $\pi$. Thus:
+\begin{align*}
+v_{\pi}(s) &\leq q_{\pi}(s,\pi'(s)) \quad\text{(Last proof)} \\
+\text{(Definition of $q_{\pi}(s,\pi'(s))$)}\quad &= \E[R_{t+1}+\gamma v_{\pi}(S_{t+1})|S_t=s,A_t=\pi'(s)] \\
+\text{(Definition above)}\quad &= \E_{\pi'}[R_{t+1}+\gamma v_{\pi}(S_{t+1})|S_t=s] \\
+\text{(Last proof extends to $S_{t+1}$)}\quad &\leq \E_{\pi'}[R_{t+1}+\gamma q_{\pi}(S_{t+1},\pi(S_{t+1}))|S_t=s] \\
+&= \E_{\pi'}[R_{t+1}|S_t=s] + \gamma \E_{\pi'}[q_{\pi}(S_{t+1},\pi(S_{t+1}))|S_t=s]
+\end{align*}
+According to the definition, we have
+\begin{align*}
+q_{\pi}(S_t,\pi'(S_t)) &= \E_{\pi'}[R_{t+1}+\gamma v_{\pi}(S_{t+1})|S_t,A_t=\pi'(S_t)] \\
+\Rightarrow\quad q_{\pi}(S_{t+1},\pi'(S_{t+1})) &= \E_{\pi'}[R_{t+2}+\gamma v_{\pi}(S_{t+2})|S_{t+1},A_t=\pi'(S_{t+1})]
+\end{align*}
+Thus, we have
+\begin{align*}
+&\quad\ \E_{\pi'}[q_{\pi}(S_{t+1},\pi(S_{t+1}))|S_t=s] \\
+\text{(above definition)} &= \E_{\pi'}[\E_{\pi'}[R_{t+2}+\gamma v_{\pi}(S_{t+2})|S_{t+1},A_t=\pi'(S_{t+1})]|S_t=s] \\
+\text{(Markov property)} &= \E_{\pi'}[\E_{\pi'}[R_{t+2}+\gamma v_{\pi}(S_{t+2})|S_{t+1},A_t=\pi'(S_{t+1}),S_t=s]|S_t=s] \\
+\text{(Adam's law with extra conditioning)} &= \E_{\pi'}[R_{t+2}+\gamma v_{\pi}(S_{t+2})|S_t=s] \\
+\end{align*}
+Put this into the origin proof, we can get that
+\begin{align*}
+v_{\pi}(s) &\leq \E_{\pi'}[R_{t+1}|S_t=s] + \gamma \E_{\pi'}[q_{\pi}(S_{t+1},\pi(S_{t+1}))|S_t=s] \\
+&\leq \E_{\pi'}[R_{t+1}|S_t=s] + \gamma \E_{\pi'}[R_{t+2}+\gamma v_{\pi}(S_{t+2})|S_t=s] \\
+&= \E_{\pi'}[R_{t+1} + \gamma R_{t+2}+\gamma v_{\pi}(S_{t+2})|S_t=s] \\
+&\leq \E_{\pi'}[R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \gamma v_{\pi}(S_{t+3})|S_t=s] \\
+&\qquad\qquad\qquad\vdots \\
+&\leq \E_{\pi'}[R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \gamma^3R_{t+3} + \cdots|S_t=s] \\
+&= \E_{\pi'}[G_t|S_t=s] \\
+&= v_{\pi'}(s)
+\end{align*}
+
+So, we have proved that
+$$v_{\pi}(s) \leq v_{\pi'}(s)$$
+Which means that the Policy Improvement by acting greedily will improve the state-action value function.
+
+\end{homeworkProblem}
+
+\newpage

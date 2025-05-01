@@ -35,10 +35,10 @@ V_{n+1}(s_2) &= \gamma V_n(s_2) = 0
 As for state $s_0$, we need to consider its actions, thus we need the state-action values:
 \begin{align*}
 Q_{n+1}(s_0, a_1) &= 0 + \gamma V_n(s_1) = \gamma \dfrac{1-\gamma^n}{1-\gamma} \\
-Q_{n+1}(s_0, a_2) &= \dfrac{\gamma^2}{1-\gamma} + \gamma V_n(s_2) = \dfrac{\gamma^2}{1-\gamma} \\
+Q_{n+1}(s_0, a_2) &= \dfrac{\gamma^2}{1-\gamma} + \gamma V_n(s_2) = \dfrac{\gamma^2}{1-\gamma}
 \end{align*}
-Thus when $Q_{n+1}(s_0, a_1)\geq Q_{n+1}(s_0, a_2)$, we will selection action $a_1$. Thus $n*$ is the minimal iteration number such that $Q_{n+1}(s_0, a_1)\geq Q_{n+1}(s_0, a_2)$. Thus we can get $n*$ by solving
-$$\gamma \dfrac{1-\gamma^n}{1-\gamma} \leq \dfrac{\gamma^2}{1-\gamma}$$
+Thus when $Q_{n+1}(s_0, a_1)\geq Q_{n+1}(s_0, a_2)$, we will selection action $a_1$. Thus $n^*$ is the minimal iteration number such that $Q_{n+1}(s_0, a_1)\geq Q_{n+1}(s_0, a_2)$. Thus we can get $n^*$ by solving
+$$\gamma \dfrac{1-\gamma^n}{1-\gamma} \geq \dfrac{\gamma^2}{1-\gamma}$$
 Solve the inequality, we have
 $$n^* \geq \dfrac{\log(1-\gamma)}{\log \gamma}$$
 So above all, we have proved that the value iteration continues to choose the sub-optimal action until iteration $n^*$  where

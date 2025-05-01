@@ -50,7 +50,7 @@ Combining them, we can get that
 \begin{align*}
 V^*(s) - V_{\pi}(s) &= V^*(s) - Q^*(s, \pi(s)) + Q^*(s, \pi(s)) - V_{\pi}(s) \\
 \text{(Conclusion of (a))}\quad &\leq 2\epsilon + Q^*(s, \pi(s)) - Q(s, \pi(s)) \\
-&= 2\epsilon + \left(\R_{\pi(s)}^{a} + \gamma\sum_{s'\in\mS}\mP_{\pi(s),s'}^aV^*(s')\right) - \left(\R_{\pi(s)}^{a} + \gamma\sum_{s'\in\mS}\mP_{\pi(s),s'}^aV_{\pi}(s')\right) \\
+&= 2\epsilon + \left(\R_{s}^{\pi(s)} + \gamma\sum_{s'\in\mS}\mP_{\pi(s),s'}^aV^*(s')\right) - \left(\R_{s}^{\pi(s)} + \gamma\sum_{s'\in\mS}\mP_{\pi(s),s'}^aV_{\pi}(s')\right) \\
 &= 2\epsilon + \gamma\sum_{s'\in\mS}\mP_{\pi(s),s'}^a\left(V^*(s') - V_{\pi}(s')\right)
 \end{align*}
 Suppose that the upper bound of $V*(s)-V_{\pi}(s)$ is $U$, i.e. $\forall s \in \mS, V^*(s)-V_{\pi}(s) \leq U$, thus we have:

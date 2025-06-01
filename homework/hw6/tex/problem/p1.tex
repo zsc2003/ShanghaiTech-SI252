@@ -107,11 +107,11 @@
         \centering
         \includegraphics[width=\textwidth]{../Img/spinningup_exercises/2_2/2_2_mistake.png}
     \end{figure}
+    The error in the code is due to a missing squeeze(-1) operation, which results in the output tensor having a shape of [B, 1] instead of the expected [B]. This can cause issues in subsequent operations, as many functions (such as loss computation or tensor arithmetic) expect inputs with shape [B], and using [B, 1] may lead to shape mismatches or broadcasting errors.
 
-
+    \item Bonus: Are there any choices of hyperparameters which would have hidden the effects of the bug?
+    Adjusting the hyperparameter: set batchsize into 1, in this case, the bug disappears.
 \end{itemize}
-
-
 
 \end{homeworkProblem}
 
